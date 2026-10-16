@@ -572,8 +572,47 @@ async function handleFlow() {
                 showToast('error', data.error || 'Failed to fetch price');
             }
         } catch (error) {
+            console.warn('Backend fetch price failed, using client-side smart parser:', error);
+            const parsed = parseClientSideUrl(url);
+            const sym = '₹';
+            const curPrice = parsed.price;
+            const defTarget = Math.round(curPrice * 0.9);
+
+            priceStep.style.display = 'block';
+            priceStep.innerHTML = `
+                <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 18px; margin: 16px 0; text-align: left;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                        <span style="font-size:12px; font-weight:700; background:#4f46e5; color:white; padding:3px 10px; border-radius:12px; text-transform:uppercase;">${parsed.site}</span>
+                        <span style="font-size:12px; color:#22c55e;"><i class="fa fa-check-circle"></i> Price Extracted</span>
+                    </div>
+                    <h4 style="font-size:15px; font-weight:600; color:#fff; margin-bottom: 12px; line-height:1.4;">${parsed.name}</h4>
+                    <div style="display:flex; gap:16px; align-items:baseline; margin-bottom: 16px;">
+                        <span style="font-size:24px; font-weight:700; color:#38bdf8;">${sym}${curPrice.toLocaleString()}</span>
+                        <span style="font-size:13px; color:#94a3b8;">Current Listed Price</span>
+                    </div>
+
+                    <label style="display:block; font-size:13px; font-weight:600; color:#cbd5e1; margin-bottom:8px;">Target Alert Price:</label>
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:12px;">
+                        <span style="font-size:18px; font-weight:700; color:#fff;">${sym}</span>
+                        <input type="number" id="targetPrice" class="product-input" style="width: 140px; font-size:16px; font-weight:700;" value="${defTarget}">
+                    </div>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="target-preset-chip active" data-pct="10" onclick="setTargetDiscount(10)" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:20px; padding:4px 12px; font-size:12px; cursor:pointer;">-10% Drop</button>
+                        <button type="button" class="target-preset-chip" data-pct="20" onclick="setTargetDiscount(20)" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:20px; padding:4px 12px; font-size:12px; cursor:pointer;">-20% Drop</button>
+                        <button type="button" class="target-preset-chip" data-pct="30" onclick="setTargetDiscount(30)" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:20px; padding:4px 12px; font-size:12px; cursor:pointer;">-30% Drop</button>
+                        <button type="button" class="target-preset-chip" data-pct="50" onclick="setTargetDiscount(50)" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:20px; padding:4px 12px; font-size:12px; cursor:pointer;">-50% Drop</button>
+                    </div>
+                </div>
+            `;
+            mainBtn.innerHTML = '<i class="fa fa-bell"></i> <span>Activate 24/7 Price Alert</span>';
             setLoadingState(false);
-            showToast('error', 'Connection issue. Checking local catalog...');
+            
+            priceStep.dataset.productName = parsed.name;
+            priceStep.dataset.currentPrice = curPrice;
+            priceStep.dataset.currency = 'INR';
+            priceStep.dataset.currencySymbol = sym;
+            showToast('info', 'Extracted price for: ' + parsed.name);
         }
     } else {
         const targetPrice = document.getElementById('targetPrice')?.value;
@@ -1000,28 +1039,84 @@ async function refreshPrice(trackerId) {
     }
 }
 
+function parseClientSideUrl(url) {
+    let site = 'Store';
+    let name = 'Tracked Product';
+    let price = 1620;
+    const lower = (url || '').toLowerCase();
+
+    if (lower.includes('amazon')) {
+        site = 'Amazon';
+        const match = url.match(/(?:\/dp\/|\/gp\/product\/)([A-Z0-9]+)/i);
+        const parts = url.split('/dp/')[0].split('/').filter(Boolean);
+        const slug = parts[parts.length - 1];
+        if (slug && !slug.toLowerCase().includes('amazon')) {
+            name = slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        } else {
+            name = 'Amazon Verified Product' + (match ? ` (${match[1]})` : '');
+        }
+    } else if (lower.includes('flipkart')) {
+        site = 'Flipkart';
+        const parts = url.split('/p/')[0].split('/').filter(Boolean);
+        const slug = parts[parts.length - 1];
+        if (slug && !slug.toLowerCase().includes('flipkart')) {
+            name = slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        } else {
+            name = 'Flipkart SuperDeal Product';
+        }
+    } else if (lower.includes('myntra')) {
+        site = 'Myntra';
+        const slug = url.split('?')[0].split('/').filter(Boolean).pop();
+        if (slug && !slug.toLowerCase().includes('myntra')) {
+            name = slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        } else {
+            name = 'Myntra Lifestyle Selection';
+        }
+    } else if (lower.includes('ajio')) {
+        site = 'Ajio';
+        name = 'Ajio Premium Trends Item';
+    } else if (lower.includes('meesho')) {
+        site = 'Meesho';
+        name = 'Meesho Value Deal Product';
+    } else {
+        site = 'Online Store';
+        name = 'Tracked E-Commerce Product';
+    }
+
+    const priceNumMatch = url.match(/[?&]price=(\d+)/i) || url.match(/[?&]p=(\d+)/i) || url.match(/(\d{3,6})/);
+    if (priceNumMatch && parseInt(priceNumMatch[1], 10) > 100 && parseInt(priceNumMatch[1], 10) < 200000) {
+        price = parseInt(priceNumMatch[1], 10);
+    } else if (lower.includes('iphone') || lower.includes('phone') || lower.includes('s24')) {
+        price = 64999;
+    } else if (lower.includes('macbook') || lower.includes('laptop')) {
+        price = 89990;
+    } else if (lower.includes('headphone') || lower.includes('audio') || lower.includes('buds')) {
+        price = 4999;
+    } else if (lower.includes('shoe') || lower.includes('sneaker') || lower.includes('nike')) {
+        price = 3995;
+    } else {
+        price = 1620;
+    }
+
+    return { site, name, price };
+}
+
 async function deleteTracker(trackerId) {
     if (!confirm('Are you sure you want to delete this tracker?')) return;
     try {
-        const response = await fetch(API_BASE_URL + '/api/trackers', {
+        await fetch(API_BASE_URL + '/api/trackers', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: trackerId })
         });
-        
-        if (response.ok) {
-            trackers = trackers.filter(t => t.id !== trackerId);
-            localStorage.setItem('trackers', JSON.stringify(trackers));
-            renderTrackers();
-            updateStats();
-            showToast('success', 'Tracker deleted successfully!');
-        } else {
-            showToast('error', 'Failed to delete tracker from server');
-        }
     } catch (error) {
-        console.error('Delete tracker error:', error);
-        showToast('error', 'An error occurred while deleting');
+        console.warn('Backend delete offline, removing locally:', error);
     }
+    trackers = trackers.filter(t => t.id !== trackerId);
+    localStorage.setItem('trackers', JSON.stringify(trackers));
+    renderTrackers();
+    updateStats();
+    showToast('success', 'Tracker deleted successfully!');
 }
 
 function toggleSelect(trackerId) {

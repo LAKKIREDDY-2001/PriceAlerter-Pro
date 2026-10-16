@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign Up - Price Alerter | AI Smart Price Drop Tracker</title>
+
+    <meta name="description" content="Create your free Price Alerter account. Track prices on Amazon, Flipkart, Myntra, and 100+ stores with instant price drop alerts.">
+    <meta name="keywords" content="price tracker, price alert, sign up, amazon price drop, flipkart price alert, deal finder">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Price Alerter">
+    
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+    <link rel="apple-touch-icon" href="/static/logo.svg">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="stylesheet" href="/static/auth.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="scene">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid"></div>
+    </div>
+
+    <div class="auth-container tilt-root" data-tilt="4">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="index.html" class="app-brand-mark" style="text-decoration:none;">
+                    <img src="/static/logo.svg" alt="Price Alerter Logo">
+                    <span style="font-family:'Unbounded',sans-serif;font-weight:700;font-size:22px;color:#0f172a;letter-spacing:-0.5px;">Price Alerter</span>
+                </a>
+                <h1>Get Started Free</h1>
+                <p>Never overpay again. Set price drop alerts in seconds.</p>
+            </div>
+
+            <!-- Instant Demo Quick Button -->
+            <button type="button" class="demo-login-btn" id="demo-login-btn">
+                <span class="demo-badge-pill">⚡ Fast Track</span>
+                <span>1-Click Demo Login (Instant Access)</span>
+            </button>
+
+            <!-- 1-Step Instant Signup Form -->
+            <form id="signup-form" class="auth-form" novalidate>
+                <div class="form-group">
+                    <label for="username"><i class="fa fa-user"></i> Full Name</label>
+                    <input type="text" id="username" name="username" placeholder="e.g. Alex Turner" autocomplete="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email"><i class="fa fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="alex@company.com" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fa fa-lock"></i> Password</label>
+                    <div class="input-with-action">
+                        <input type="password" id="password" name="password" placeholder="Minimum 6 characters" autocomplete="new-password" required>
+                        <button type="button" class="toggle-password" data-target="password" title="Show/Hide Password">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password"><i class="fa fa-shield-alt"></i> Confirm Password</label>
+                    <div class="input-with-action">
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat password" autocomplete="new-password" required>
+                        <button type="button" class="toggle-password" data-target="confirm_password" title="Show/Hide Password">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#475569;cursor:pointer;">
+                        <input type="checkbox" id="terms" checked required style="width:auto;margin:0;">
+                        <span>I agree to the <a href="terms.html" style="color:#4f46e5;text-decoration:none;font-weight:600;">Terms</a> and <a href="privacy.html" style="color:#4f46e5;text-decoration:none;font-weight:600;">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <div id="error-message" class="error-message" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;padding:10px 14px;border-radius:10px;font-size:13px;margin:14px 0;"></div>
+
+                <button type="submit" class="auth-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;border:none;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 25px rgba(79,70,229,0.3);transition:all 0.2s;">
+                    <span>Create Free Account</span>
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer" style="text-align:center;margin-top:20px;font-size:14px;color:#64748b;">
+                <p>Already have an account? <a href="login.html" style="color:#4f46e5;font-weight:700;text-decoration:none;">Sign In</a></p>
+            </div>
+
+            <!-- Supported platforms strip -->
+            <div class="supported-platforms-strip">
+                <span>Supports:</span>
+                <span class="store-chip-tag amz">Amazon</span>
+                <span class="store-chip-tag fk">Flipkart</span>
+                <span class="store-chip-tag myn">Myntra</span>
+                <span class="store-chip-tag apl">Apple</span>
+                <span class="store-chip-tag">+100 Stores</span>
+            </div>
+        </div>
+
+        <div class="auth-features" style="flex:1;background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);color:white;padding:48px;display:flex;flex-direction:column;justify-content:center;">
+            <div style="display:inline-block;background:rgba(255,255,255,0.1);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:16px;letter-spacing:0.5px;">
+                🚀 STARTUP GRADE PRICE INTELLIGENCE
+            </div>
+            <h2 style="font-size:28px;font-weight:700;line-height:1.25;margin-bottom:16px;">Save Money on Every Online Purchase.</h2>
+            <p style="color:#94a3b8;font-size:15px;line-height:1.6;margin-bottom:32px;">Paste any product URL from your favorite stores. Our background scrapers monitor prices 24/7 and alert you instantly the moment prices drop.</p>
+            
+            <div class="features-list" style="display:flex;flex-direction:column;gap:20px;">
+                <div class="feature" style="display:flex;gap:14px;align-items:flex-start;">
+                    <div style="width:38px;height:38px;border-radius:10px;background:rgba(79,70,229,0.25);display:flex;align-items:center;justify-content:center;color:#818cf8;font-size:16px;flex-shrink:0;">
+                        <i class="fa fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:4px;">Real-Time Price Alerts</h4>
+                        <p style="font-size:13px;color:#94a3b8;margin:0;">Instant notifications when prices drop to your target amount.</p>
+                    </div>
+                </div>
+
+                <div class="feature" style="display:flex;gap:14px;align-items:flex-start;">
+                    <div style="width:38px;height:38px;border-radius:10px;background:rgba(6,182,212,0.25);display:flex;align-items:center;justify-content:center;color:#38bdf8;font-size:16px;flex-shrink:0;">
+                        <i class="fa fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:4px;">Historical Price Analytics</h4>
+                        <p style="font-size:13px;color:#94a3b8;margin:0;">Interactive charts showing whether today's price is genuinely a good deal.</p>
+                    </div>
+                </div>
+
+                <div class="feature" style="display:flex;gap:14px;align-items:flex-start;">
+                    <div style="width:38px;height:38px;border-radius:10px;background:rgba(245,158,11,0.25);display:flex;align-items:center;justify-content:center;color:#fbbf24;font-size:16px;flex-shrink:0;">
+                        <i class="fa fa-mobile-screen"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:4px;">Cross-Platform Universal</h4>
+                        <p style="font-size:13px;color:#94a3b8;margin:0;">Seamless on iOS, Android, Mac, Windows, and Chrome.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/auth.js"></script>
+</body>
+</html>
