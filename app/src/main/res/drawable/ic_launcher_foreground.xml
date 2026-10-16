@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Sound / Alert Pulse Waves -->
+    <path
+        android:pathData="M33,33 C39,27 46,24 54,24 C62,24 69,27 75,33"
+        android:strokeColor="#80FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M27,27 C35,19 44,16 54,16 C64,16 73,19 81,27"
+        android:strokeColor="#4010B981"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Top Bell Loop -->
+    <path
+        android:pathData="M54,26m-4,0a4,4 0 1,1 8,0a4,4 0 1,1 -8,0"
+        android:fillColor="#F8FAFC" />
+
+    <!-- Main Bell Body -->
+    <path
+        android:pathData="M54,29 C44,29 39,37 39,49 C39,57 36,63 32,67 L76,67 C72,63 69,57 69,49 C69,37 64,29 54,29 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Bell Bottom Rim & Shadow -->
+    <path
+        android:pathData="M30,67 L78,67 C79.1,67 80,67.9 80,69 C80,70.1 79.1,71 78,71 L30,71 C28.9,71 28,70.1 28,69 C28,67.9 28.9,67 30,67 Z"
+        android:fillColor="#E2E8F0" />
+
+    <!-- Bell Clapper -->
+    <path
+        android:pathData="M49,71 C49,74 51,76 54,76 C57,76 59,74 59,71 Z"
+        android:fillColor="#94A3B8" />
+
+    <!-- Price Drop Badge Shield (Lower Right) -->
+    <path
+        android:pathData="M62,56 C62,52 66,48 71,48 L81,48 C86,48 90,52 90,56 L90,66 C90,75 76,84 76,84 C76,84 62,75 62,66 Z"
+        android:fillColor="#10B981" />
+
+    <!-- Price Drop Downward Arrow inside Badge -->
+    <path
+        android:pathData="M76,54 L76,72 M71,67 L76,72 L81,67"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Mini Currency Symbol Indicator -->
+    <path
+        android:pathData="M48,44 L56,44 M48,48 L56,48 M48,44 L52,53 M52,53 C54,53 56,52 56,50"
+        android:strokeColor="#2563EB"
+        android:strokeWidth="2"
+        android:strokeLineCap="round" />
+
+</vector>

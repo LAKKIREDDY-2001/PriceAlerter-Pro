@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="bellGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e7ff" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#ef4444" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#4f46e5" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle App Container -->
+  <rect x="6" y="6" width="108" height="108" rx="28" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  
+  <!-- Subtle inner border -->
+  <rect x="7" y="7" width="106" height="106" rx="27" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+
+  <!-- Bell Base -->
+  <path d="M60 26 C57.8 26 56 27.8 56 30 C46 32 40 40 40 52 C40 64 36 68 32 72 C32 74 34 76 38 76 L82 76 C86 76 88 74 88 72 C84 68 80 64 80 52 C80 40 74 32 64 30 C64 27.8 62.2 26 60 26 Z" fill="url(#bellGrad)"/>
+  
+  <!-- Bell Clapper -->
+  <path d="M53 78 C53 82 56 85 60 85 C64 85 67 82 67 78 Z" fill="#ffffff" opacity="0.9"/>
+
+  <!-- Price Drop Downward Trend / Spark Indicator -->
+  <circle cx="78" cy="40" r="14" fill="url(#glowGrad)"/>
+  <path d="M74 37 L82 37 M82 37 L82 45 M82 37 L73 46" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

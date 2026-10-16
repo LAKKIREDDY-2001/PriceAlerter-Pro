@@ -1,0 +1,32 @@
+{
+  "name": "Price Alerter - AI Smart Price Tracker",
+  "short_name": "Price Alerter",
+  "description": "Never miss a price drop on Amazon, Flipkart, Myntra and 100+ stores. Real-time alerts and smart price analytics.",
+  "start_url": "/dashboard.html",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/static/logo.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Track New Item",
+      "url": "/dashboard.html?action=new",
+      "description": "Track a new product link"
+    },
+    {
+      "name": "My Trackers",
+      "url": "/dashboard.html?action=list",
+      "description": "View active price alerts"
+    }
+  ]
+}
