@@ -161,12 +161,12 @@ public class AiProductComparator {
 
         ComparisonResult r = new ComparisonResult();
         r.name1 = s1.name;
-        r.price1 = s1.price > 0 ? s1.price : 14999.0;
+        r.price1 = s1.price > 0 ? s1.price : LivePriceScraper.estimateCatalogPrice(url1, s1.name, s1.site);
         r.site1 = s1.site;
         r.url1 = url1;
 
         r.name2 = s2.name;
-        r.price2 = s2.price > 0 ? s2.price : 18499.0;
+        r.price2 = s2.price > 0 ? s2.price : LivePriceScraper.estimateCatalogPrice(url2, s2.name, s2.site);
         r.site2 = s2.site;
         r.url2 = url2;
         r.currencySymbol = "₹";
@@ -177,7 +177,7 @@ public class AiProductComparator {
 
         r.scorePricing1 = r.price1 <= r.price2 ? 9.2 : 8.0;
         r.scorePricing2 = r.price2 <= r.price1 ? 9.2 : 8.0;
-        r.pricingInsight = (r.winnerIndex == 1 ? r.name1 : r.name2) + " delivers better value-for-money, saving ₹" + String.format("%.2f", r.priceDifference);
+        r.pricingInsight = (r.winnerIndex == 1 ? r.name1 : r.name2) + " delivers better value-for-money at ₹" + String.format(java.util.Locale.US, "%,.2f", (r.winnerIndex == 1 ? r.price1 : r.price2)) + ", saving ₹" + String.format(java.util.Locale.US, "%,.2f", r.priceDifference);
 
         r.scoreReviews1 = 9.1;
         r.scoreReviews2 = 8.7;

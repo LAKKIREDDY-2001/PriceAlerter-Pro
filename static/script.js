@@ -1028,44 +1028,108 @@ async function fetchProductUrl() {
 
 function parseClientSideUrl(url) {
   let site = 'Store';
-  let name = 'Tracked Product';
-  let price = 59999;
+  let name = '';
+  let price = 1499;
   let thumb = '/static/images/iphone15.svg';
   let storeIcon = '/static/images/amazon.svg';
   const lower = url.toLowerCase();
 
+  // 1. Detect Store
   if (lower.includes('amazon')) {
     site = 'Amazon';
     storeIcon = '/static/images/amazon.svg';
-    if (lower.includes('tv') || lower.includes('samsung')) {
-      name = 'Samsung 55" 4K Ultra HD Smart TV';
-      thumb = '/static/images/samsung-tv.svg';
-      price = 45990;
-    } else if (lower.includes('watch')) {
-      name = 'Apple Watch Series 9 GPS 45mm';
-      thumb = '/static/images/apple-watch.svg';
-      price = 41999;
-    } else if (lower.includes('sony') || lower.includes('headphone')) {
-      name = 'Sony WH-1000XM5 Wireless Headphones';
-      thumb = '/static/images/sony-headphones.svg';
-      price = 24999;
-    } else {
-      name = 'Apple iPhone 15 (128GB) - Black';
-      thumb = '/static/images/iphone15.svg';
-      price = 59999;
-    }
   } else if (lower.includes('flipkart')) {
     site = 'Flipkart';
     storeIcon = '/static/images/flipkart.svg';
-    if (lower.includes('sony') || lower.includes('headphone')) {
-      name = 'Sony WH-1000XM5 Wireless Headphones';
-      thumb = '/static/images/sony-headphones.svg';
-      price = 24999;
-    } else {
-      name = 'Apple Watch Series 9 GPS 45mm';
-      thumb = '/static/images/apple-watch.svg';
-      price = 41999;
+  } else if (lower.includes('myntra')) {
+    site = 'Myntra';
+    storeIcon = '/static/images/myntra.svg';
+  } else if (lower.includes('ajio')) {
+    site = 'Ajio';
+    storeIcon = '/static/images/ajio.svg';
+  } else if (lower.includes('meesho')) {
+    site = 'Meesho';
+    storeIcon = '/static/images/meesho.svg';
+  } else if (lower.includes('croma')) {
+    site = 'Croma';
+    storeIcon = '/static/images/amazon.svg';
+  } else if (lower.includes('tatacliq')) {
+    site = 'Tata CLiQ';
+    storeIcon = '/static/images/amazon.svg';
+  }
+
+  // 2. Extract genuine product title from URL slug
+  try {
+    const cleanUrl = url.split('?')[0].split('#')[0].replace(/\/+$/, '');
+    const parts = cleanUrl.split('/').filter(p => p && p.length > 0);
+
+    let bestSlug = '';
+    // Look for hyphenated or underscore slug in path
+    for (const part of parts) {
+      const decoded = decodeURIComponent(part);
+      if ((decoded.includes('-') || decoded.includes('_')) && decoded.length > 6) {
+        const lowerPart = decoded.toLowerCase();
+        if (!['dp', 'gp', 'product', 'item', 'buy', 'shop', 'itm', 'ref', 'pages', 'p', 'browse'].includes(lowerPart)) {
+          bestSlug = decoded;
+          break;
+        }
+      }
     }
+
+    if (!bestSlug && parts.length > 0) {
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const decoded = decodeURIComponent(parts[i]);
+        if (decoded.length > 4 && !/^\d+$/.test(decoded) && !['dp', 'p', 'product', 'itm'].includes(decoded.toLowerCase())) {
+          bestSlug = decoded;
+          break;
+        }
+      }
+    }
+
+    if (bestSlug) {
+      let clean = bestSlug.replace(/[-_+]/g, ' ')
+                          .replace(/\.(html|htm|php).*$/i, '')
+                          .replace(/\b(dp|itm|p|buy|ref|product|item)\b/gi, '')
+                          .trim();
+      clean = clean.replace(/\s{2,}/g, ' ');
+      if (clean.length >= 3) {
+        name = clean.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+      }
+    }
+  } catch (e) {
+    console.error("Error extracting slug from URL:", e);
+  }
+
+  if (!name || name.length < 3) {
+    name = `${site} Shopping Item`;
+  }
+
+  // 3. Category Heuristics for thumbnail & baseline price
+  const nameLower = name.toLowerCase();
+  if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('earphone') || nameLower.includes('audio') || nameLower.includes('boat')) {
+    thumb = '/static/images/sony-headphones.svg';
+    price = 2499;
+  } else if (nameLower.includes('tv') || nameLower.includes('television') || nameLower.includes('monitor') || nameLower.includes('screen')) {
+    thumb = '/static/images/samsung-tv.svg';
+    price = 42990;
+  } else if (nameLower.includes('watch') || nameLower.includes('band') || nameLower.includes('smartwatch')) {
+    thumb = '/static/images/apple-watch.svg';
+    price = 4999;
+  } else if (nameLower.includes('laptop') || nameLower.includes('macbook') || nameLower.includes('notebook')) {
+    thumb = '/static/images/laptop.svg';
+    price = 54990;
+  } else if (nameLower.includes('shoe') || nameLower.includes('sneaker') || nameLower.includes('nike') || nameLower.includes('puma') || nameLower.includes('air max')) {
+    thumb = '/static/images/shoes.svg';
+    price = 3799;
+  } else if (nameLower.includes('mouse') || nameLower.includes('keyboard') || nameLower.includes('portronics') || nameLower.includes('toad')) {
+    thumb = '/static/images/accessory.svg';
+    price = 699;
+  } else if (nameLower.includes('iphone') || nameLower.includes('galaxy') || nameLower.includes('phone') || nameLower.includes('mobile')) {
+    thumb = '/static/images/iphone15.svg';
+    price = 19999;
+  } else {
+    thumb = '/static/images/generic-product.svg';
+    price = 1499;
   }
 
   return { site, name, price, thumb, storeIcon };
@@ -1080,10 +1144,20 @@ function populatePreviewCard(name, site, price, url) {
 
   const thumbImg = document.getElementById('modal-preview-thumb');
   if (thumbImg) {
-    if (name.toLowerCase().includes('sony')) thumbImg.src = '/static/images/sony-headphones.svg';
-    else if (name.toLowerCase().includes('tv')) thumbImg.src = '/static/images/samsung-tv.svg';
-    else if (name.toLowerCase().includes('watch')) thumbImg.src = '/static/images/apple-watch.svg';
-    else thumbImg.src = '/static/images/iphone15.svg';
+    const nameLower = name.toLowerCase();
+    if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('boat')) {
+      thumbImg.src = '/static/images/sony-headphones.svg';
+    } else if (nameLower.includes('tv') || nameLower.includes('television')) {
+      thumbImg.src = '/static/images/samsung-tv.svg';
+    } else if (nameLower.includes('watch') || nameLower.includes('band')) {
+      thumbImg.src = '/static/images/apple-watch.svg';
+    } else if (nameLower.includes('laptop') || nameLower.includes('macbook')) {
+      thumbImg.src = '/static/images/laptop.svg';
+    } else if (nameLower.includes('shoe') || nameLower.includes('nike')) {
+      thumbImg.src = '/static/images/shoes.svg';
+    } else {
+      thumbImg.src = '/static/images/iphone15.svg';
+    }
   }
 
   const titleEl = document.getElementById('modal-preview-title');
@@ -1092,11 +1166,16 @@ function populatePreviewCard(name, site, price, url) {
   const storeEl = document.getElementById('modal-preview-store');
   if (storeEl) {
     const icon = site.toLowerCase().includes('flipkart') ? '/static/images/flipkart.svg' : '/static/images/amazon.svg';
-    storeEl.innerHTML = `<img src="${icon}" class="store-icon"> <span>${site}</span>`;
+    storeEl.innerHTML = `<img src="${icon}" class="store-icon" alt="${site}"> <span>${site}</span>`;
   }
 
   const curPriceEl = document.getElementById('modal-preview-current-price');
-  if (curPriceEl) curPriceEl.textContent = `₹${price.toLocaleString()}`;
+  if (curPriceEl) {
+    curPriceEl.textContent = `₹${price.toLocaleString()}`;
+    curPriceEl.style.cursor = 'pointer';
+    curPriceEl.title = 'Click to edit live price';
+    curPriceEl.onclick = editPreviewPrice;
+  }
 
   const mrpEl = document.getElementById('modal-preview-mrp');
   if (mrpEl) mrpEl.textContent = `₹${Math.round(price * 1.15).toLocaleString()}`;
@@ -1107,6 +1186,24 @@ function populatePreviewCard(name, site, price, url) {
   previewBox.dataset.url = url;
 
   recalcTargetPrice();
+}
+
+function editPreviewPrice() {
+  const previewBox = document.getElementById('modal-preview-box');
+  const curPrice = parseFloat(previewBox?.dataset?.currentPrice || 1499);
+  const val = prompt("Enter the exact current price you see on the store (₹):", curPrice);
+  if (val !== null && val.trim() !== '') {
+    const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+    if (!isNaN(num) && num > 0) {
+      previewBox.dataset.currentPrice = num;
+      const curPriceEl = document.getElementById('modal-preview-current-price');
+      if (curPriceEl) curPriceEl.textContent = `₹${num.toLocaleString()}`;
+      const mrpEl = document.getElementById('modal-preview-mrp');
+      if (mrpEl) mrpEl.textContent = `₹${Math.round(num * 1.15).toLocaleString()}`;
+      recalcTargetPrice();
+      showToast(`Live price set to ₹${num.toLocaleString()}`);
+    }
+  }
 }
 
 function recalcTargetPrice() {
@@ -1128,10 +1225,15 @@ function confirmAddTracker() {
   const url = previewBox?.dataset?.url || "https://www.amazon.in";
   const targetPrice = parseFloat(targetInput?.value || Math.round(curPrice * 0.9));
 
-  let thumb = '/static/images/iphone15.svg';
-  if (name.toLowerCase().includes('sony')) thumb = '/static/images/sony-headphones.svg';
-  else if (name.toLowerCase().includes('tv')) thumb = '/static/images/samsung-tv.svg';
-  else if (name.toLowerCase().includes('watch')) thumb = '/static/images/apple-watch.svg';
+  let thumb = '/static/images/generic-product.svg';
+  const nameLower = name.toLowerCase();
+  if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('boat')) thumb = '/static/images/sony-headphones.svg';
+  else if (nameLower.includes('tv') || nameLower.includes('television')) thumb = '/static/images/samsung-tv.svg';
+  else if (nameLower.includes('watch') || nameLower.includes('band')) thumb = '/static/images/apple-watch.svg';
+  else if (nameLower.includes('laptop') || nameLower.includes('macbook')) thumb = '/static/images/laptop.svg';
+  else if (nameLower.includes('shoe') || nameLower.includes('nike')) thumb = '/static/images/shoes.svg';
+  else if (nameLower.includes('mouse') || nameLower.includes('keyboard') || nameLower.includes('portronics') || nameLower.includes('toad')) thumb = '/static/images/accessory.svg';
+  else if (nameLower.includes('iphone') || nameLower.includes('phone') || nameLower.includes('galaxy')) thumb = '/static/images/iphone15.svg';
 
   const newTracker = {
     id: Date.now(),
@@ -1147,7 +1249,7 @@ function confirmAddTracker() {
     currencySymbol: "₹",
     status: targetPrice >= curPrice ? "below" : "tracking",
     statusLabel: targetPrice >= curPrice ? "Below Target 🎯" : "Tracking",
-    change: 0.0,
+    change: targetPrice > 0 && curPrice > 0 ? -Math.round(((curPrice - targetPrice) / curPrice) * 100) : 0,
     inStock: true,
     url: url,
     createdAt: new Date().toISOString(),

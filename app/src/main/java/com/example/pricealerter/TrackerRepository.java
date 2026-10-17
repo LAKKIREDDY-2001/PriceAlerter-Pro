@@ -242,4 +242,9 @@ public class TrackerRepository {
             }
         });
     }
+
+    public void clearAllTrackers(RepositoryCallback<Boolean> callback) {
+        saveLocalTrackers(new ArrayList<>());
+        mainHandler.post(() -> callback.onSuccess(true));
+    }
 }

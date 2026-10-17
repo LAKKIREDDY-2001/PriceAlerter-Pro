@@ -82,11 +82,14 @@ public class TrackerItem {
     }
 
     public String getChangeText() {
-        if (productName.toLowerCase().contains("iphone")) return "↓ 2.1%";
-        if (productName.toLowerCase().contains("sony")) return "↑ 0.5%";
-        if (productName.toLowerCase().contains("tv") || productName.toLowerCase().contains("samsung")) return "↑ 3.2%";
-        if (productName.toLowerCase().contains("watch")) return "↓ 0.8%";
-        if (isTargetMet()) return "↓ 4.5%";
+        if (targetPrice > 0 && currentPrice > 0) {
+            double pct = ((targetPrice - currentPrice) / targetPrice) * 100.0;
+            if (pct >= 0) {
+                return String.format(java.util.Locale.US, "↓ %.1f%%", Math.abs(pct));
+            } else {
+                return String.format(java.util.Locale.US, "↑ %.1f%%", Math.abs(pct));
+            }
+        }
         return "↓ 1.2%";
     }
 
@@ -95,11 +98,12 @@ public class TrackerItem {
     }
 
     public String getStatusBadgeText() {
-        if (isTargetMet() || productName.toLowerCase().contains("iphone")) {
+        if (isTargetMet()) {
             return "Below Target 🎯";
         }
-        if (productName.toLowerCase().contains("tv")) {
-            return "Price Up";
+        if (targetPrice > 0 && currentPrice > targetPrice) {
+            double diff = (currentPrice - targetPrice) / targetPrice;
+            if (diff > 0.05) return "Price Up";
         }
         return "Tracking";
     }

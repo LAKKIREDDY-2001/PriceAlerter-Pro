@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.graphics.Color;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,6 +56,8 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.widget.EditText;
+
 public class MainActivity extends AppCompatActivity {
     private MaterialToolbar toolbar;
     private BottomNavigationView bottomNav;
@@ -76,23 +80,34 @@ public class MainActivity extends AppCompatActivity {
     private TrackerRepository trackerRepo;
 
     // Tab 2: Quick Add
-    private TextInputEditText etMainProductUrl;
-    private MaterialButton btnPasteClipboard, btnMainFetchPrice;
+    private View btnBackQuickAdd;
+    private EditText etMainProductUrl;
+    private View btnPasteClipboard;
+    private MaterialButton btnMainFetchPrice;
+    private View layoutFetchingIndicator;
     private ProgressBar pbMainLoadingPrice;
     private MaterialCardView cardMainProductResult;
-    private TextView tvMainSiteBadge, tvMainProductName, tvMainCurrentPrice;
-    private MaterialButton btnMainEditPrice;
-    private MaterialButton chip10Percent, chip20Percent, chip30Percent;
-    private TextInputEditText etMainTargetPrice;
+    private ImageView ivMainPreviewThumb, ivMainPreviewStoreLogo;
+    private TextView tvMainSiteBadge, tvMainProductName, tvMainCurrentPrice, tvMainOriginalPrice;
+    private TextView btnMainEditPrice;
+    private View chip10Percent, chip20Percent, chip30Percent;
+    private EditText etMainTargetPrice;
     private MaterialButton btnMainSaveAlert;
     private double currentFetchedPrice = 0.0;
     private String currentFetchedName = "";
     private String currentFetchedSite = "";
+    private int currentFetchedThumbResId = 0;
 
-    // Tab 3: AI Product Comparison
-    private TextInputEditText etCompareUrl1, etCompareUrl2;
-    private MaterialButton btnPasteCompare1, btnPasteCompare2;
-    private MaterialButton chipDemoComparePhones, chipDemoCompareLaptops, chipDemoCompareAudio;
+    // Tab 3: Alerts (Figma Mobile 4) & AI Product Comparison
+    private TextView pillAlertAll, pillAlertDrops, pillAlertHikes;
+    private MaterialCardView cardAlert1, cardAlert2, cardAlert3, cardAlert4;
+    private TextView btnAlert1View, btnAlert1Snooze, btnAlert1Dismiss;
+    private TextView btnAlert2View, btnAlert2Snooze, btnAlert2Dismiss;
+    private TextView btnAlert3View, btnAlert3Snooze, btnAlert3Dismiss;
+    private TextView btnAlert4View, btnAlert4Snooze, btnAlert4Dismiss;
+    private EditText etCompareUrl1, etCompareUrl2;
+    private View btnPasteCompare1, btnPasteCompare2;
+    private View chipDemoComparePhones, chipDemoCompareLaptops, chipDemoCompareAudio;
     private MaterialButton btnRunAiCompare;
     private ProgressBar pbCompareLoading;
     private View layoutCompareResults;
@@ -116,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup rgMainServer;
     private RadioButton rbMainCloud, rbMainLocal, rbMainCustom;
     private TextInputLayout tilMainCustomUrl;
-    private TextInputEditText etMainCustomUrl;
+    private EditText etMainCustomUrl;
     private SwitchMaterial switchMainNotifications;
+    private TextView btnThemeLight, btnThemeDark;
 
     private PreferencesManager prefs;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -176,15 +192,23 @@ public class MainActivity extends AppCompatActivity {
         chartStockTrend = findViewById(R.id.chartStockTrend);
         findViewById(R.id.btnEmptyTrack).setOnClickListener(v -> bottomNav.setSelectedItemId(R.id.nav_quick_add));
 
-        // Tab 2 views
+        // Tab 2 views (Add Product - Figma Mobile 2)
+        btnBackQuickAdd = findViewById(R.id.btnBackQuickAdd);
+        if (btnBackQuickAdd != null) {
+            btnBackQuickAdd.setOnClickListener(v -> bottomNav.setSelectedItemId(R.id.nav_trackers));
+        }
         etMainProductUrl = findViewById(R.id.etMainProductUrl);
         btnPasteClipboard = findViewById(R.id.btnPasteClipboard);
         btnMainFetchPrice = findViewById(R.id.btnMainFetchPrice);
+        layoutFetchingIndicator = findViewById(R.id.layoutFetchingIndicator);
         pbMainLoadingPrice = findViewById(R.id.pbMainLoadingPrice);
         cardMainProductResult = findViewById(R.id.cardMainProductResult);
+        ivMainPreviewThumb = findViewById(R.id.ivMainPreviewThumb);
+        ivMainPreviewStoreLogo = findViewById(R.id.ivMainPreviewStoreLogo);
         tvMainSiteBadge = findViewById(R.id.tvMainSiteBadge);
         tvMainProductName = findViewById(R.id.tvMainProductName);
         tvMainCurrentPrice = findViewById(R.id.tvMainCurrentPrice);
+        tvMainOriginalPrice = findViewById(R.id.tvMainOriginalPrice);
         btnMainEditPrice = findViewById(R.id.btnMainEditPrice);
         chip10Percent = findViewById(R.id.chip10Percent);
         chip20Percent = findViewById(R.id.chip20Percent);
@@ -192,7 +216,28 @@ public class MainActivity extends AppCompatActivity {
         etMainTargetPrice = findViewById(R.id.etMainTargetPrice);
         btnMainSaveAlert = findViewById(R.id.btnMainSaveAlert);
 
-        // Tab 3 views (AI Compare)
+        // Tab 3 views (Alerts - Figma Mobile 4)
+        pillAlertAll = findViewById(R.id.pillAlertAll);
+        pillAlertDrops = findViewById(R.id.pillAlertDrops);
+        pillAlertHikes = findViewById(R.id.pillAlertHikes);
+        cardAlert1 = findViewById(R.id.cardAlert1);
+        cardAlert2 = findViewById(R.id.cardAlert2);
+        cardAlert3 = findViewById(R.id.cardAlert3);
+        cardAlert4 = findViewById(R.id.cardAlert4);
+        btnAlert1View = findViewById(R.id.btnAlert1View);
+        btnAlert1Snooze = findViewById(R.id.btnAlert1Snooze);
+        btnAlert1Dismiss = findViewById(R.id.btnAlert1Dismiss);
+        btnAlert2View = findViewById(R.id.btnAlert2View);
+        btnAlert2Snooze = findViewById(R.id.btnAlert2Snooze);
+        btnAlert2Dismiss = findViewById(R.id.btnAlert2Dismiss);
+        btnAlert3View = findViewById(R.id.btnAlert3View);
+        btnAlert3Snooze = findViewById(R.id.btnAlert3Snooze);
+        btnAlert3Dismiss = findViewById(R.id.btnAlert3Dismiss);
+        btnAlert4View = findViewById(R.id.btnAlert4View);
+        btnAlert4Snooze = findViewById(R.id.btnAlert4Snooze);
+        btnAlert4Dismiss = findViewById(R.id.btnAlert4Dismiss);
+
+        // AI Compare sub-views
         etCompareUrl1 = findViewById(R.id.etCompareUrl1);
         etCompareUrl2 = findViewById(R.id.etCompareUrl2);
         btnPasteCompare1 = findViewById(R.id.btnPasteCompare1);
@@ -222,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
         btnBuyProduct1 = findViewById(R.id.btnBuyProduct1);
         btnBuyProduct2 = findViewById(R.id.btnBuyProduct2);
 
-        // Tab 4 views (Settings & Profile)
+        // Tab 4 views (Settings & Profile - Figma Mobile 5)
         tvSettingsUsername = findViewById(R.id.tvSettingsUsername);
         tvSettingsEmail = findViewById(R.id.tvSettingsEmail);
         tvSettingsEmailBadge = findViewById(R.id.tvSettingsEmailBadge);
@@ -232,6 +277,8 @@ public class MainActivity extends AppCompatActivity {
         btnSettingsAuth = findViewById(R.id.btnSettingsAuth);
         btnSettingsDemoLogin = findViewById(R.id.btnSettingsDemoLogin);
         btnTestNotification = findViewById(R.id.btnTestNotification);
+        btnThemeLight = findViewById(R.id.btnThemeLight);
+        btnThemeDark = findViewById(R.id.btnThemeDark);
         cardTotalSaved = findViewById(R.id.cardTotalSaved);
         tvSettingsTotalSaved = findViewById(R.id.tvSettingsTotalSaved);
         tvSettingsSavedSubtitle = findViewById(R.id.tvSettingsSavedSubtitle);
@@ -305,17 +352,17 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.nav_trackers) {
                 toolbar.setTitle("Price Alerter");
-                toolbar.setSubtitle("Live Price Alerts & Stock Graph");
+                toolbar.setSubtitle(null);
                 refreshTrackersList();
             } else if (id == R.id.nav_quick_add) {
-                toolbar.setTitle("Track Price");
-                toolbar.setSubtitle("Paste Product Link");
+                toolbar.setTitle("Add Product");
+                toolbar.setSubtitle(null);
             } else if (id == R.id.nav_compare) {
-                toolbar.setTitle("AI Product Comparison");
-                toolbar.setSubtitle("Segment-by-Segment Rating & Analysis");
+                toolbar.setTitle("Alerts");
+                toolbar.setSubtitle(null);
             } else if (id == R.id.nav_settings) {
-                toolbar.setTitle("Customer Profile");
-                toolbar.setSubtitle("Account & Total Savings");
+                toolbar.setTitle("Settings");
+                toolbar.setSubtitle(null);
                 updateSettingsUi();
             }
             return true;
@@ -536,7 +583,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchProductPrice(String productUrl) {
         btnMainFetchPrice.setEnabled(false);
-        pbMainLoadingPrice.setVisibility(View.VISIBLE);
+        if (layoutFetchingIndicator != null) layoutFetchingIndicator.setVisibility(View.VISIBLE);
+        if (pbMainLoadingPrice != null) pbMainLoadingPrice.setVisibility(View.VISIBLE);
         cardMainProductResult.setVisibility(View.GONE);
 
         String baseUrl = prefs.getBaseServerUrl();
@@ -576,16 +624,24 @@ public class MainActivity extends AppCompatActivity {
                         currentFetchedName = res.optString("productName", "Tracked Product");
                         currentFetchedPrice = price;
                         currentFetchedSite = res.optString("site", TrackerItem.detectSite(productUrl));
+                        currentFetchedThumbResId = LivePriceScraper.pickThumbnail(currentFetchedName, currentFetchedSite);
                         fetchedSuccessfully = true;
 
                         mainHandler.post(() -> {
-                            pbMainLoadingPrice.setVisibility(View.GONE);
+                            if (layoutFetchingIndicator != null) layoutFetchingIndicator.setVisibility(View.GONE);
+                            if (pbMainLoadingPrice != null) pbMainLoadingPrice.setVisibility(View.GONE);
                             btnMainFetchPrice.setEnabled(true);
                             cardMainProductResult.setVisibility(View.VISIBLE);
 
                             tvMainProductName.setText(currentFetchedName);
                             tvMainSiteBadge.setText(currentFetchedSite);
                             tvMainCurrentPrice.setText("₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice));
+
+                            if (ivMainPreviewThumb != null) {
+                                ivMainPreviewThumb.setImageResource(currentFetchedThumbResId);
+                            }
+                            updateStoreLogo(ivMainPreviewStoreLogo, currentFetchedSite);
+                            updateOriginalPrice(currentFetchedPrice);
 
                             setTargetPercent(0.90);
                             Toast.makeText(MainActivity.this, "Live price fetched: ₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice), Toast.LENGTH_SHORT).show();
@@ -598,29 +654,58 @@ public class MainActivity extends AppCompatActivity {
             if (!fetchedSuccessfully) {
                 LivePriceScraper.ScrapedProduct directScraped = LivePriceScraper.scrapeDirectly(productUrl);
                 mainHandler.post(() -> {
-                    pbMainLoadingPrice.setVisibility(View.GONE);
+                    if (layoutFetchingIndicator != null) layoutFetchingIndicator.setVisibility(View.GONE);
+                    if (pbMainLoadingPrice != null) pbMainLoadingPrice.setVisibility(View.GONE);
                     btnMainFetchPrice.setEnabled(true);
                     cardMainProductResult.setVisibility(View.VISIBLE);
 
                     currentFetchedSite = directScraped.site;
                     currentFetchedName = directScraped.name;
+                    currentFetchedThumbResId = directScraped.thumbResId;
                     tvMainSiteBadge.setText(currentFetchedSite);
                     tvMainProductName.setText(currentFetchedName);
+
+                    if (ivMainPreviewThumb != null) {
+                        ivMainPreviewThumb.setImageResource(currentFetchedThumbResId);
+                    }
+                    updateStoreLogo(ivMainPreviewStoreLogo, currentFetchedSite);
 
                     if (directScraped.price > 0) {
                         currentFetchedPrice = directScraped.price;
                         tvMainCurrentPrice.setText("₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice));
+                        updateOriginalPrice(currentFetchedPrice);
                         setTargetPercent(0.90);
                         Toast.makeText(MainActivity.this, "Live price fetched: ₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice), Toast.LENGTH_SHORT).show();
                     } else {
                         currentFetchedPrice = 0.0;
-                        tvMainCurrentPrice.setText("Tap 'Edit Price' to set (₹)");
+                        tvMainCurrentPrice.setText("Tap to enter live price (₹)");
+                        if (tvMainOriginalPrice != null) tvMainOriginalPrice.setVisibility(View.GONE);
                         setTargetPercent(0.90);
                         showEditPriceDialog();
                     }
                 });
             }
         });
+    }
+
+    private void updateStoreLogo(ImageView storeLogoView, String site) {
+        if (storeLogoView == null) return;
+        String s = (site != null ? site : "").toLowerCase();
+        if (s.contains("amazon")) storeLogoView.setImageResource(R.drawable.ic_store_amazon);
+        else if (s.contains("flipkart")) storeLogoView.setImageResource(R.drawable.ic_store_flipkart);
+        else if (s.contains("myntra")) storeLogoView.setImageResource(R.drawable.ic_store_myntra);
+        else if (s.contains("ajio")) storeLogoView.setImageResource(R.drawable.ic_store_ajio);
+        else if (s.contains("meesho")) storeLogoView.setImageResource(R.drawable.ic_store_meesho);
+        else storeLogoView.setImageResource(R.drawable.ic_store_generic);
+    }
+
+    private void updateOriginalPrice(double price) {
+        if (tvMainOriginalPrice != null && price > 0) {
+            double orig = price * 1.15;
+            tvMainOriginalPrice.setText("₹" + String.format(Locale.US, "%,.0f", orig));
+            tvMainOriginalPrice.setPaintFlags(tvMainOriginalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+            tvMainOriginalPrice.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setTargetPercent(double multiplier) {
@@ -641,6 +726,7 @@ public class MainActivity extends AppCompatActivity {
         String productUrl = extractCleanUrl(etMainProductUrl.getText() != null ? etMainProductUrl.getText().toString() : "");
 
         double effectiveCurrentPrice = currentFetchedPrice > 0 ? currentFetchedPrice : targetPrice * 1.1;
+        int thumb = currentFetchedThumbResId > 0 ? currentFetchedThumbResId : LivePriceScraper.pickThumbnail(currentFetchedName, currentFetchedSite);
 
         TrackerItem newItem = new TrackerItem(
                 (int) System.currentTimeMillis(),
@@ -652,7 +738,7 @@ public class MainActivity extends AppCompatActivity {
                 "₹",
                 currentFetchedSite,
                 "Just now",
-                0
+                thumb
         );
 
         trackerRepo.addTracker(newItem, new TrackerRepository.RepositoryCallback<TrackerItem>() {
@@ -694,43 +780,176 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ==========================================
-    // TAB 3: AI PRODUCT COMPARISON
+    // TAB 3: ALERTS (Figma Mobile 4) & AI COMPARISON
     // ==========================================
     private void setupCompareTab() {
-        btnPasteCompare1.setOnClickListener(v -> pasteToEditText(etCompareUrl1));
-        btnPasteCompare2.setOnClickListener(v -> pasteToEditText(etCompareUrl2));
+        // Filter Pills: All (5) | Price Drop (3) | Price Up (2)
+        if (pillAlertAll != null) {
+            pillAlertAll.setOnClickListener(v -> {
+                pillAlertAll.setBackgroundResource(R.drawable.badge_below_target);
+                pillAlertAll.setTextColor(Color.parseColor("#059669"));
+                if (pillAlertDrops != null) {
+                    pillAlertDrops.setBackgroundResource(R.drawable.badge_tracking);
+                    pillAlertDrops.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                }
+                if (pillAlertHikes != null) {
+                    pillAlertHikes.setBackgroundResource(R.drawable.badge_tracking);
+                    pillAlertHikes.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                }
+                if (cardAlert1 != null) cardAlert1.setVisibility(View.VISIBLE);
+                if (cardAlert2 != null) cardAlert2.setVisibility(View.VISIBLE);
+                if (cardAlert3 != null) cardAlert3.setVisibility(View.VISIBLE);
+                if (cardAlert4 != null) cardAlert4.setVisibility(View.VISIBLE);
+            });
+        }
 
-        chipDemoComparePhones.setOnClickListener(v -> {
-            etCompareUrl1.setText("https://www.amazon.in/dp/B0CHX1W1XY"); // iPhone 15
-            etCompareUrl2.setText("https://www.flipkart.com/samsung-galaxy-s24-5g"); // Galaxy S24
-            runAiComparison();
-        });
+        if (pillAlertDrops != null) {
+            pillAlertDrops.setOnClickListener(v -> {
+                pillAlertDrops.setBackgroundResource(R.drawable.badge_below_target);
+                pillAlertDrops.setTextColor(Color.parseColor("#059669"));
+                if (pillAlertAll != null) {
+                    pillAlertAll.setBackgroundResource(R.drawable.badge_tracking);
+                    pillAlertAll.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                }
+                if (pillAlertHikes != null) {
+                    pillAlertHikes.setBackgroundResource(R.drawable.badge_tracking);
+                    pillAlertHikes.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                }
+                if (cardAlert1 != null) cardAlert1.setVisibility(View.VISIBLE);
+                if (cardAlert2 != null) cardAlert2.setVisibility(View.VISIBLE);
+                if (cardAlert3 != null) cardAlert3.setVisibility(View.GONE);
+                if (cardAlert4 != null) cardAlert4.setVisibility(View.VISIBLE);
+            });
+        }
 
-        chipDemoCompareLaptops.setOnClickListener(v -> {
-            etCompareUrl1.setText("https://www.flipkart.com/apple-macbook-air-m2");
-            etCompareUrl2.setText("https://www.amazon.in/dp/B0D1K7P9QW");
-            runAiComparison();
-        });
+        if (pillAlertHikes != null) {
+            pillAlertHikes.setOnClickListener(v -> {
+                pillAlertHikes.setBackgroundResource(R.drawable.badge_price_up);
+                pillAlertHikes.setTextColor(ContextCompat.getColor(this, R.color.error));
+                if (pillAlertAll != null) {
+                    pillAlertAll.setBackgroundResource(R.drawable.badge_tracking);
+                    pillAlertAll.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                }
+                if (pillAlertDrops != null) {
+                    pillAlertDrops.setBackgroundResource(R.drawable.badge_tracking);
+                    pillAlertDrops.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                }
+                if (cardAlert1 != null) cardAlert1.setVisibility(View.GONE);
+                if (cardAlert2 != null) cardAlert2.setVisibility(View.GONE);
+                if (cardAlert3 != null) cardAlert3.setVisibility(View.VISIBLE);
+                if (cardAlert4 != null) cardAlert4.setVisibility(View.GONE);
+            });
+        }
 
-        chipDemoCompareAudio.setOnClickListener(v -> {
-            etCompareUrl1.setText("https://www.amazon.in/dp/B09XS7JWHH");
-            etCompareUrl2.setText("https://www.flipkart.com/bose-quietcomfort-ultra");
-            runAiComparison();
-        });
+        // Alert Card 1 Actions (iPhone 15 Drop)
+        if (btnAlert1View != null) {
+            btnAlert1View.setOnClickListener(v -> {
+                TrackerItem dummyItem = new TrackerItem(101, "https://www.amazon.in/dp/B0CHX1W1XY", "Apple iPhone 15 (128GB)", 54999, 55000, "INR", "₹", "Amazon", "2 hours ago", R.drawable.ic_prod_iphone);
+                new CelebrationDialog(this, dummyItem).show();
+            });
+        }
+        if (btnAlert1Snooze != null) {
+            btnAlert1Snooze.setOnClickListener(v -> Toast.makeText(this, "iPhone 15 alert snoozed for 24h", Toast.LENGTH_SHORT).show());
+        }
+        if (btnAlert1Dismiss != null) {
+            btnAlert1Dismiss.setOnClickListener(v -> {
+                if (cardAlert1 != null) cardAlert1.setVisibility(View.GONE);
+                Toast.makeText(this, "Alert dismissed", Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        btnRunAiCompare.setOnClickListener(v -> runAiComparison());
+        // Alert Card 2 Actions (Sony WH-1000XM5 Drop)
+        if (btnAlert2View != null) {
+            btnAlert2View.setOnClickListener(v -> {
+                TrackerItem dummyItem = new TrackerItem(102, "https://www.amazon.in/dp/B09XS7JWHH", "Sony WH-1000XM5", 19999, 20000, "INR", "₹", "Amazon", "5 hours ago", R.drawable.ic_prod_sony);
+                new CelebrationDialog(this, dummyItem).show();
+            });
+        }
+        if (btnAlert2Snooze != null) {
+            btnAlert2Snooze.setOnClickListener(v -> Toast.makeText(this, "Sony headphones alert snoozed for 24h", Toast.LENGTH_SHORT).show());
+        }
+        if (btnAlert2Dismiss != null) {
+            btnAlert2Dismiss.setOnClickListener(v -> {
+                if (cardAlert2 != null) cardAlert2.setVisibility(View.GONE);
+                Toast.makeText(this, "Alert dismissed", Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        btnBuyProduct1.setOnClickListener(v -> {
-            if (!currentCompareUrl1.isEmpty()) {
-                openExternalUrl(currentCompareUrl1);
-            }
-        });
+        // Alert Card 3 Actions (Samsung TV Hike)
+        if (btnAlert3View != null) {
+            btnAlert3View.setOnClickListener(v -> {
+                TrackerItem dummyItem = new TrackerItem(103, "https://www.flipkart.com/samsung-55-4k-tv", "Samsung 55\" 4K TV", 45990, 44500, "INR", "₹", "Flipkart", "1 day ago", R.drawable.ic_prod_tv);
+                new ProductDetailBottomSheetDialog(this, dummyItem).show();
+            });
+        }
+        if (btnAlert3Snooze != null) {
+            btnAlert3Snooze.setOnClickListener(v -> Toast.makeText(this, "Samsung TV alert snoozed for 24h", Toast.LENGTH_SHORT).show());
+        }
+        if (btnAlert3Dismiss != null) {
+            btnAlert3Dismiss.setOnClickListener(v -> {
+                if (cardAlert3 != null) cardAlert3.setVisibility(View.GONE);
+                Toast.makeText(this, "Alert dismissed", Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        btnBuyProduct2.setOnClickListener(v -> {
-            if (!currentCompareUrl2.isEmpty()) {
-                openExternalUrl(currentCompareUrl2);
-            }
-        });
+        // Alert Card 4 Actions (Apple Watch Drop)
+        if (btnAlert4View != null) {
+            btnAlert4View.setOnClickListener(v -> {
+                TrackerItem dummyItem = new TrackerItem(104, "https://www.flipkart.com/apple-watch-series-9", "Apple Watch Series 9", 34999, 35000, "INR", "₹", "Flipkart", "2 days ago", R.drawable.ic_prod_watch);
+                new CelebrationDialog(this, dummyItem).show();
+            });
+        }
+        if (btnAlert4Snooze != null) {
+            btnAlert4Snooze.setOnClickListener(v -> Toast.makeText(this, "Apple Watch alert snoozed for 24h", Toast.LENGTH_SHORT).show());
+        }
+        if (btnAlert4Dismiss != null) {
+            btnAlert4Dismiss.setOnClickListener(v -> {
+                if (cardAlert4 != null) cardAlert4.setVisibility(View.GONE);
+                Toast.makeText(this, "Alert dismissed", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        // AI Comparison actions
+        if (btnPasteCompare1 != null) btnPasteCompare1.setOnClickListener(v -> pasteToEditText(etCompareUrl1));
+        if (btnPasteCompare2 != null) btnPasteCompare2.setOnClickListener(v -> pasteToEditText(etCompareUrl2));
+
+        if (chipDemoComparePhones != null) {
+            chipDemoComparePhones.setOnClickListener(v -> {
+                if (etCompareUrl1 != null) etCompareUrl1.setText("https://www.amazon.in/dp/B0CHX1W1XY");
+                if (etCompareUrl2 != null) etCompareUrl2.setText("https://www.flipkart.com/samsung-galaxy-s24-5g");
+                runAiComparison();
+            });
+        }
+
+        if (chipDemoCompareLaptops != null) {
+            chipDemoCompareLaptops.setOnClickListener(v -> {
+                if (etCompareUrl1 != null) etCompareUrl1.setText("https://www.flipkart.com/apple-macbook-air-m2");
+                if (etCompareUrl2 != null) etCompareUrl2.setText("https://www.amazon.in/dp/B0D1K7P9QW");
+                runAiComparison();
+            });
+        }
+
+        if (chipDemoCompareAudio != null) {
+            chipDemoCompareAudio.setOnClickListener(v -> {
+                if (etCompareUrl1 != null) etCompareUrl1.setText("https://www.amazon.in/dp/B09XS7JWHH");
+                if (etCompareUrl2 != null) etCompareUrl2.setText("https://www.flipkart.com/bose-quietcomfort-ultra");
+                runAiComparison();
+            });
+        }
+
+        if (btnRunAiCompare != null) btnRunAiCompare.setOnClickListener(v -> runAiComparison());
+
+        if (btnBuyProduct1 != null) {
+            btnBuyProduct1.setOnClickListener(v -> {
+                if (!currentCompareUrl1.isEmpty()) openExternalUrl(currentCompareUrl1);
+            });
+        }
+
+        if (btnBuyProduct2 != null) {
+            btnBuyProduct2.setOnClickListener(v -> {
+                if (!currentCompareUrl2.isEmpty()) openExternalUrl(currentCompareUrl2);
+            });
+        }
     }
 
     private void runAiComparison() {
@@ -846,7 +1065,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void pasteToEditText(TextInputEditText editText) {
+    private void pasteToEditText(EditText editText) {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null && cm.hasPrimaryClip() && cm.getPrimaryClip().getItemCount() > 0) {
             CharSequence text = cm.getPrimaryClip().getItemAt(0).getText();
@@ -885,37 +1104,73 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnTestNotification.setOnClickListener(v -> {
-            NotificationHelper.sendPriceAlert(
-                    this,
-                    "Price Drop Alert! 🛒📉",
-                    "Apple iPhone 15 dropped to ₹54,999 (Target Met!) Tap to buy.",
-                    "https://www.amazon.in/dp/B0CHX1W1XY"
-            );
-            Toast.makeText(this, "Test notification sent! Check your notification bar.", Toast.LENGTH_SHORT).show();
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Clear All Tracked Products?")
+                    .setMessage("Are you sure you want to remove all tracked products from your alerts list? This cannot be undone.")
+                    .setIcon(R.drawable.ic_trash)
+                    .setPositiveButton("Clear All", (dialog, which) -> {
+                        trackerRepo.clearAllTrackers(new TrackerRepository.RepositoryCallback<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean result) {
+                                Toast.makeText(MainActivity.this, "All tracked products cleared", Toast.LENGTH_SHORT).show();
+                                refreshTrackersList();
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                refreshTrackersList();
+                            }
+                        });
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
 
-        rgMainServer.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rbMainLocal) {
-                prefs.setServerMode(PreferencesManager.MODE_LOCAL);
-                tilMainCustomUrl.setVisibility(View.GONE);
-            } else if (checkedId == R.id.rbMainCustom) {
-                prefs.setServerMode(PreferencesManager.MODE_CUSTOM);
-                tilMainCustomUrl.setVisibility(View.VISIBLE);
-            } else {
-                prefs.setServerMode(PreferencesManager.MODE_CLOUD);
-                tilMainCustomUrl.setVisibility(View.GONE);
-            }
-        });
+        if (btnThemeLight != null && btnThemeDark != null) {
+            btnThemeLight.setOnClickListener(v -> {
+                btnThemeLight.setBackgroundResource(R.drawable.badge_below_target);
+                btnThemeLight.setTextColor(Color.parseColor("#059669"));
+                btnThemeDark.setBackground(null);
+                btnThemeDark.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                Toast.makeText(this, "Light theme active", Toast.LENGTH_SHORT).show();
+            });
+            btnThemeDark.setOnClickListener(v -> {
+                btnThemeDark.setBackgroundResource(R.drawable.badge_below_target);
+                btnThemeDark.setTextColor(Color.parseColor("#059669"));
+                btnThemeLight.setBackground(null);
+                btnThemeLight.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                Toast.makeText(this, "Dark theme active", Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        etMainCustomUrl.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus && etMainCustomUrl.getText() != null) {
-                prefs.setCustomUrl(etMainCustomUrl.getText().toString().trim());
-            }
-        });
+        if (rgMainServer != null) {
+            rgMainServer.setOnCheckedChangeListener((group, checkedId) -> {
+                if (checkedId == R.id.rbMainLocal) {
+                    prefs.setServerMode(PreferencesManager.MODE_LOCAL);
+                    if (tilMainCustomUrl != null) tilMainCustomUrl.setVisibility(View.GONE);
+                } else if (checkedId == R.id.rbMainCustom) {
+                    prefs.setServerMode(PreferencesManager.MODE_CUSTOM);
+                    if (tilMainCustomUrl != null) tilMainCustomUrl.setVisibility(View.VISIBLE);
+                } else {
+                    prefs.setServerMode(PreferencesManager.MODE_CLOUD);
+                    if (tilMainCustomUrl != null) tilMainCustomUrl.setVisibility(View.GONE);
+                }
+            });
+        }
 
-        switchMainNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            prefs.setNotificationsEnabled(isChecked);
-        });
+        if (etMainCustomUrl != null) {
+            etMainCustomUrl.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus && etMainCustomUrl.getText() != null) {
+                    prefs.setCustomUrl(etMainCustomUrl.getText().toString().trim());
+                }
+            });
+        }
+
+        if (switchMainNotifications != null) {
+            switchMainNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.setNotificationsEnabled(isChecked);
+            });
+        }
     }
 
     private void updateSettingsUi() {

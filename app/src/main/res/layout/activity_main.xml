@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Clean White Top App Bar (Mobile 1) -->
+    <!-- Clean White Top App Bar (Figma Mobile 1) -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -22,10 +22,10 @@
             android:background="@color/surface"
             app:navigationIcon="@drawable/logo_price_alerter"
             app:title="@string/app_name"
-            app:titleTextColor="@color/text_primary"
+            app:titleTextColor="@color/primary"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
-            <!-- Bell Icon with Red Notification Dot -->
+            <!-- Bell Icon with Red Notification Dot (Figma Mobile 1) -->
             <ImageView
                 android:id="@+id/ivToolbarBell"
                 android:layout_width="32dp"
@@ -59,7 +59,7 @@
         android:layout_marginBottom="68dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- ================= TAB 1: HOME / DASHBOARD (Mobile 1) ================= -->
+        <!-- ================= TAB 1: HOME / DASHBOARD (Figma Mobile 1) ================= -->
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshTrackers"
             android:layout_width="match_parent"
@@ -153,14 +153,13 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Section Header: "Your Products" and "See all" -->
+                    <!-- Section Header: "Your Products" & "See all" (Figma Mobile 1) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="18dp"
-                        android:layout_marginEnd="18dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -183,7 +182,7 @@
 
                     </LinearLayout>
 
-                    <!-- RecyclerView for Tracked Products -->
+                    <!-- RecyclerView for Tracked Products (4 Items rendered via tools) -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvTrackers"
                         android:layout_width="match_parent"
@@ -239,7 +238,7 @@
                                     android:paddingEnd="8dp"
                                     android:paddingTop="3dp"
                                     android:paddingBottom="3dp"
-                                    android:text="Active Tracking"
+                                    android:text="Active Tracking ⚡"
                                     android:textColor="#059669"
                                     android:textSize="11sp"
                                     android:textStyle="bold" />
@@ -250,7 +249,7 @@
                                 android:id="@+id/tvStockTrendSubtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
+                                android:layout_marginTop="2dp"
                                 android:text="🟢 Green below target • 🔴 Red price hike zone"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
@@ -308,7 +307,7 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!-- ================= TAB 2: ADD PRODUCT (Mobile 2) ================= -->
+        <!-- ================= TAB 2: ADD PRODUCT (Figma Mobile 2) ================= -->
         <ScrollView
             android:id="@+id/viewQuickAdd"
             android:layout_width="match_parent"
@@ -323,25 +322,46 @@
                 android:padding="20dp"
                 android:paddingBottom="90dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Header: Back Arrow + Title (Figma Mobile 2) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Product"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/btnBackQuickAdd"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_arrow_back"
+                        android:contentDescription="Back" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginEnd="28dp"
+                        android:text="Add Product"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <!-- Paste product URL label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="8dp"
                     android:text="Paste product URL"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <!-- URL Input Card with Amazon & Flipkart icons inside (Figma Mobile 2) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -356,7 +376,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:padding="12dp">
 
                         <EditText
                             android:id="@+id/etMainProductUrl"
@@ -370,14 +390,31 @@
                             android:textColorHint="@color/text_secondary"
                             android:textSize="13sp" />
 
+                        <!-- Amazon icon inside search bar -->
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginEnd="6dp"
+                            android:src="@drawable/ic_store_amazon"
+                            android:contentDescription="Amazon" />
+
+                        <!-- Flipkart icon inside search bar -->
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_store_flipkart"
+                            android:contentDescription="Flipkart" />
+
+                        <!-- Clipboard Paste Button -->
                         <ImageView
                             android:id="@+id/btnPasteClipboard"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:background="@drawable/badge_tracking"
-                            android:contentDescription="Store"
-                            android:padding="4dp"
-                            android:src="@drawable/ic_store_amazon" />
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_marginStart="8dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Paste Clipboard"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_paste" />
 
                     </LinearLayout>
 
@@ -387,7 +424,7 @@
                 <com.google.android.material.chip.ChipGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="4dp">
 
                     <com.google.android.material.chip.Chip
@@ -397,9 +434,7 @@
                         android:layout_height="wrap_content"
                         android:text="Amazon: iPhone 15"
                         android:textSize="11sp"
-                        app:chipCornerRadius="16dp"
-                        app:chipStrokeColor="@color/card_stroke"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipCornerRadius="16dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipDemoMacBook"
@@ -408,9 +443,7 @@
                         android:layout_height="wrap_content"
                         android:text="Flipkart: MacBook Air"
                         android:textSize="11sp"
-                        app:chipCornerRadius="16dp"
-                        app:chipStrokeColor="@color/card_stroke"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipCornerRadius="16dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipDemoNike"
@@ -419,38 +452,53 @@
                         android:layout_height="wrap_content"
                         android:text="Myntra: Nike Air"
                         android:textSize="11sp"
-                        app:chipCornerRadius="16dp"
-                        app:chipStrokeColor="@color/card_stroke"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipCornerRadius="16dp" />
 
                 </com.google.android.material.chip.ChipGroup>
 
-                <!-- Solid Blue Fetch Button -->
+                <!-- Solid Blue Fetch Button (Figma Mobile 2) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMainFetchPrice"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="10dp"
                     android:backgroundTint="@color/primary"
                     android:text="Fetch"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:cornerRadius="12dp" />
 
-                <ProgressBar
-                    android:id="@+id/pbMainLoadingPrice"
-                    android:layout_width="wrap_content"
+                <!-- Shimmer / Progress indicator (Figma Mobile 2) -->
+                <LinearLayout
+                    android:id="@+id/layoutFetchingIndicator"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone" />
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                <!-- Product Preview Card -->
+                    <ProgressBar
+                        android:id="@+id/pbMainLoadingPrice"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Fetching product..."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                </LinearLayout>
+
+                <!-- Product Preview Card (Figma Mobile 2) -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardMainProductResult"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="16dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="1dp"
@@ -461,14 +509,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:id="@+id/ivMainPreviewThumb"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
                             android:background="@drawable/badge_tracking"
                             android:padding="6dp"
-                            android:src="@drawable/ic_prod_iphone" />
+                            android:src="@drawable/ic_prod_iphone"
+                            android:contentDescription="Product image" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -489,12 +540,21 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/ivMainPreviewStoreLogo"
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:src="@drawable/ic_store_amazon"
+                                    android:contentDescription="Store" />
 
                                 <TextView
                                     android:id="@+id/tvMainSiteBadge"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
                                     android:text="Amazon"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11sp" />
@@ -515,15 +575,32 @@
 
                             </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tvMainCurrentPrice"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="₹59,999"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvMainCurrentPrice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="₹59,999"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvMainOriginalPrice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="₹69,900"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="13sp" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -531,7 +608,7 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Set Target Price Label & Input -->
+                <!-- Set Target Price Label & Input (Figma Mobile 2) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -539,7 +616,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="Set Target Price"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <com.google.android.material.card.MaterialCardView
@@ -571,7 +648,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:hint="55000"
+                            android:hint="20000"
                             android:inputType="numberDecimal"
                             android:textColor="@color/text_primary"
                             android:textSize="16sp"
@@ -613,7 +690,104 @@
 
                 </LinearLayout>
 
-                <!-- Big Green Start Tracking Button (Mobile 2) -->
+                <!-- Alert Channel Section (Figma Mobile 2) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Alert channel"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <!-- Email notifications toggle -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_mail"
+                                android:contentDescription="Email" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="Email notifications"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchEmailNotifications"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@color/card_stroke" />
+
+                        <!-- Push notifications toggle -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_bell"
+                                android:contentDescription="Push" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="Push notifications"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchPushNotifications"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Big Green Start Tracking Button (Figma Mobile 2) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMainSaveAlert"
                     android:layout_width="match_parent"
@@ -637,7 +811,7 @@
 
         </ScrollView>
 
-        <!-- ================= TAB 3: ALERTS & AI COMPARE (Mobile 3 & 4) ================= -->
+        <!-- ================= TAB 3: ALERTS / NOTIFICATIONS (Figma Mobile 4) ================= -->
         <ScrollView
             android:id="@+id/viewCompare"
             android:layout_width="match_parent"
@@ -652,57 +826,76 @@
                 android:padding="16dp"
                 android:paddingBottom="90dp">
 
-                <!-- Header & Filter Pills (Figma Mobile 4) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Alerts"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
+                <!-- Header: Bell Icon + "Alerts" (Figma Mobile 4) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_bell"
+                        android:contentDescription="Alerts" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Alerts"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Filter Pills: All (5), Price Drop (3), Price Up (2) (Figma Mobile 4) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/pillAlertAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/badge_below_target"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:text="All (5)"
                         android:textColor="#059669"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/pillAlertDrops"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/badge_tracking"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:text="Price Drop (3)"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/pillAlertHikes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/badge_tracking"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:text="Price Up (2)"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
@@ -712,14 +905,15 @@
 
                 <!-- Figma Mobile 4 Alert Card 1: iPhone 15 Drop -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAlert1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="1dp"
-                    app:strokeColor="#A7F3D0"
-                    app:strokeWidth="1.5dp">
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -734,12 +928,12 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:background="@drawable/badge_below_target"
-                                android:padding="7dp"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/badge_tracking"
+                                android:padding="6dp"
                                 android:src="@drawable/ic_prod_iphone"
-                                android:contentDescription="iPhone" />
+                                android:contentDescription="iPhone 15" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -751,40 +945,77 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Target Reached! ₹54,990"
-                                    android:textColor="#059669"
-                                    android:textSize="13sp"
+                                    android:text="Apple iPhone 15 (128GB)"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="1dp"
-                                    android:text="Dropped ₹5,009 below your target"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Dropped to ₹54,999\n(target ₹55,000)"
+                                    android:textColor="#059669"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="2 hours ago"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11sp" />
 
                             </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="2h ago"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="11sp" />
+                            <!-- Circular green checkmark badge (Figma Mobile 4) -->
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_check_circle_green"
+                                android:contentDescription="Success" />
 
                         </LinearLayout>
 
-                        <com.google.android.material.button.MaterialButton
+                        <!-- Actions row: View • Snooze • Dismiss (Figma Mobile 4) -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="42dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:backgroundTint="#059669"
-                            android:text="Buy Now on Amazon"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="10dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/btnAlert1View"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="4dp"
+                                android:text="View"
+                                android:textColor="@color/primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/btnAlert1Snooze"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Snooze"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/btnAlert1Dismiss"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Dismiss"
+                                android:textColor="@color/error"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -792,6 +1023,7 @@
 
                 <!-- Figma Mobile 4 Alert Card 2: Sony Headphones Drop -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAlert2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -814,10 +1046,10 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
                                 android:background="@drawable/badge_tracking"
-                                android:padding="7dp"
+                                android:padding="6dp"
                                 android:src="@drawable/ic_prod_sony"
                                 android:contentDescription="Sony" />
 
@@ -831,27 +1063,73 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Price Dropped: ₹24,990"
-                                    android:textColor="@color/primary"
-                                    android:textSize="13sp"
+                                    android:text="Sony WH-1000XM5"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="1dp"
-                                    android:text="₹2,000 drop (from ₹26,990)"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Dropped to ₹19,999\n(target ₹20,000)"
+                                    android:textColor="#059669"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="5 hours ago"
                                     android:textColor="@color/text_secondary"
                                     android:textSize="11sp" />
 
                             </LinearLayout>
 
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_check_circle_green"
+                                android:contentDescription="Success" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
                             <TextView
+                                android:id="@+id/btnAlert2View"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="5h ago"
+                                android:padding="4dp"
+                                android:text="View"
+                                android:textColor="@color/primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/btnAlert2Snooze"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Snooze"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="11sp" />
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/btnAlert2Dismiss"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Dismiss"
+                                android:textColor="@color/error"
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -859,52 +1137,253 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- AI Comparison Divider Header -->
+                <!-- Figma Mobile 4 Alert Card 3: Samsung 55" 4K TV Hike -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAlert3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/badge_tracking"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_prod_tv"
+                                android:contentDescription="TV" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Samsung 55&quot; 4K TV"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Increased to ₹45,990\n(from ₹44,500)"
+                                    android:textColor="@color/error"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="1 day ago"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11sp" />
+
+                            </LinearLayout>
+
+                            <!-- Circular red up arrow badge -->
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_arrow_circle_red"
+                                android:contentDescription="Hike" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/btnAlert3View"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="4dp"
+                                android:text="View"
+                                android:textColor="@color/primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/btnAlert3Snooze"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Snooze"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/btnAlert3Dismiss"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Dismiss"
+                                android:textColor="@color/error"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Figma Mobile 4 Alert Card 4: Apple Watch Series 9 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAlert4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/badge_tracking"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_prod_watch"
+                                android:contentDescription="Apple Watch" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Apple Watch Series 9"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Dropped to ₹34,999\n(target ₹35,000)"
+                                    android:textColor="#059669"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="2 days ago"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11sp" />
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_check_circle_green"
+                                android:contentDescription="Success" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/btnAlert4View"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="4dp"
+                                android:text="View"
+                                android:textColor="@color/primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/btnAlert4Snooze"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Snooze"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/btnAlert4Dismiss"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:padding="4dp"
+                                android:text="Dismiss"
+                                android:textColor="@color/error"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Optional AI Comparison Module at bottom -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="28dp"
                     android:text="Product Comparison by AI"
                     android:textColor="@color/text_primary"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDemoComparePhones"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="iPhone 15 vs S24"
-                        app:chipCornerRadius="16dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDemoCompareLaptops"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="MacBook vs XPS"
-                        app:chipCornerRadius="16dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDemoCompareAudio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="Sony vs Bose"
-                        app:chipCornerRadius="16dp" />
-
-                </LinearLayout>
-
-                <!-- Input URLs Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="12dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="1dp"
@@ -1023,7 +1502,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Segment Cards -->
+                    <!-- Segment 1 Value -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -1133,6 +1612,9 @@
                     <com.google.android.material.button.MaterialButton android:id="@+id/btnBuyProduct2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                     <ImageView android:id="@+id/btnPasteCompare1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                     <ImageView android:id="@+id/btnPasteCompare2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chipDemoComparePhones" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chipDemoCompareLaptops" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chipDemoCompareAudio" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -1140,7 +1622,7 @@
 
         </ScrollView>
 
-        <!-- ================= TAB 4: SETTINGS (Mobile 5) ================= -->
+        <!-- ================= TAB 4: SETTINGS (Figma Mobile 5) ================= -->
         <ScrollView
             android:id="@+id/viewSettings"
             android:layout_width="match_parent"
@@ -1155,19 +1637,35 @@
                 android:padding="20dp"
                 android:paddingBottom="90dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Header: Gear icon + "Settings" (Figma Mobile 5) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Settings"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <!-- Notification Settings Card (Mobile 5) -->
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_settings"
+                        android:contentDescription="Settings" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Settings"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Section 1: Notification Settings (Figma Mobile 5) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="22dp"
                     android:layout_marginBottom="8dp"
                     android:text="Notification Settings"
                     android:textColor="@color/text_primary"
@@ -1196,18 +1694,32 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
-                        <EditText
-                            android:id="@+id/tvSettingsEmail"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:background="@drawable/badge_tracking"
-                            android:drawableStart="@drawable/ic_user"
-                            android:drawablePadding="8dp"
-                            android:padding="10dp"
-                            android:text="madhava.reddy@example.com"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_mail"
+                                android:contentDescription="Mail" />
+
+                            <EditText
+                                android:id="@+id/tvSettingsEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@null"
+                                android:text="madhava.reddy@example.com"
+                                android:textColor="@color/text_primary"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -1217,26 +1729,50 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:background="@drawable/badge_tracking"
-                            android:padding="12dp"
-                            android:text="Every 6 hours"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Every 6 hours"
+                                android:textColor="@color/text_primary"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_chevron_right"
+                                android:rotation="90"
+                                android:contentDescription="Dropdown" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Profile & Savings Card -->
+                <!-- Section 2: Preferences (Theme Light / Dark) (Figma Mobile 5) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Preferences"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTotalSaved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="1dp"
@@ -1246,60 +1782,224 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:padding="16dp">
 
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_moon"
+                            android:contentDescription="Theme" />
+
                         <TextView
-                            android:id="@+id/tvSettingsUsername"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Madhava Reddy"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="Theme"
                             android:textColor="@color/text_primary"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvSettingsTotalSaved"
+                        <!-- Segmented Toggle: Light / Dark (Figma Mobile 5) -->
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="₹2,340 Saved"
-                            android:textColor="@color/accent"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                            android:background="@drawable/badge_tracking"
+                            android:padding="3dp"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tvSettingsSavedSubtitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Gold Saver Tier Member"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
+                            <TextView
+                                android:id="@+id/btnThemeLight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_below_target"
+                                android:paddingStart="14dp"
+                                android:paddingEnd="14dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:text="Light"
+                                android:textColor="#059669"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/btnThemeDark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="14dp"
+                                android:paddingEnd="14dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:text="Dark"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Clear Tracked Items Button (Mobile 5) -->
+                <!-- Section 3: Account (Figma Mobile 5) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Account"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Manage Notifications -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_bell"
+                                android:contentDescription="Notifications" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="Manage notifications"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_chevron_right"
+                                android:contentDescription="Arrow" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/card_stroke" />
+
+                        <!-- Help & Support -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_help"
+                                android:contentDescription="Help" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="Help &amp; Support"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_chevron_right"
+                                android:contentDescription="Arrow" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/card_stroke" />
+
+                        <!-- About -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_info"
+                                android:contentDescription="About" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="About"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_chevron_right"
+                                android:contentDescription="Arrow" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Big Red Clear Button (Figma Mobile 5) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTestNotification"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="52dp"
                     android:layout_marginTop="24dp"
                     android:backgroundTint="@color/error"
                     android:text="Clear all tracked products"
                     android:textColor="@color/white"
                     android:textStyle="bold"
+                    app:icon="@drawable/ic_trash"
+                    app:iconTint="@color/white"
+                    app:iconGravity="textStart"
                     app:cornerRadius="14dp" />
 
                 <!-- Hidden legacy bindings for MainActivity -->
+                <TextView android:id="@+id/tvSettingsUsername" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+                <TextView android:id="@+id/tvSettingsTotalSaved" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+                <TextView android:id="@+id/tvSettingsSavedSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <TextView android:id="@+id/tvSettingsEmailBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <TextView android:id="@+id/tvSettingsPhone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <TextView android:id="@+id/tvSettingsPhoneBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <TextView android:id="@+id/tvSettingsMemberSince" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <com.google.android.material.button.MaterialButton android:id="@+id/btnSettingsAuth" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <com.google.android.material.button.MaterialButton android:id="@+id/btnSettingsDemoLogin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cardTotalSaved" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <RadioGroup android:id="@+id/rgMainServer" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <RadioButton android:id="@+id/rbMainCloud" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
                 <RadioButton android:id="@+id/rbMainLocal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
@@ -1314,7 +2014,7 @@
 
     </FrameLayout>
 
-    <!-- Floating Action Button (FAB) (Mobile 1) -->
+    <!-- Floating Action Button (FAB) (Figma Mobile 1) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddProduct"
         android:layout_width="wrap_content"
@@ -1329,7 +2029,7 @@
         app:elevation="6dp"
         app:tint="@color/white" />
 
-    <!-- Bottom Navigation Bar (4 Items) -->
+    <!-- Bottom Navigation Bar (4 Items matching Figma Mobile 1) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
