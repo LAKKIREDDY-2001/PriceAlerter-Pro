@@ -952,6 +952,23 @@ function setupAddProductFlow() {
   if (startBtn) {
     startBtn.onclick = () => confirmAddTracker();
   }
+
+  // Live editable current price input listener
+  const curPriceInput = document.getElementById('modal-current-price-input');
+  if (curPriceInput) {
+    curPriceInput.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      if (!isNaN(val) && val > 0) {
+        const previewBox = document.getElementById('modal-preview-box');
+        if (previewBox) previewBox.dataset.currentPrice = val;
+        const curPriceEl = document.getElementById('modal-preview-current-price');
+        if (curPriceEl) curPriceEl.textContent = `₹${val.toLocaleString()}`;
+        const mrpEl = document.getElementById('modal-preview-mrp');
+        if (mrpEl) mrpEl.textContent = `₹${Math.round(val * 1.15).toLocaleString()}`;
+        recalcTargetPrice();
+      }
+    });
+  }
 }
 
 function openAddProductModal() {
@@ -1029,10 +1046,26 @@ async function fetchProductUrl() {
 function parseClientSideUrl(url) {
   let site = 'Store';
   let name = '';
-  let price = 1499;
+  let price = 1620;
   let thumb = '/static/images/iphone15.svg';
   let storeIcon = '/static/images/amazon.svg';
   const lower = url.toLowerCase();
+
+  // Extract explicit price from pasted text if present (e.g., ₹1,620 or 1620)
+  const priceRegex = /(?:₹|rs\.?|inr|price:?)\s*([0-9,]+(?:\.[0-9]{1,2})?)/i;
+  const match = url.match(priceRegex);
+  let explicitPrice = null;
+  if (match) {
+    const val = parseFloat(match[1].replace(/,/g, ''));
+    if (!isNaN(val) && val > 0) explicitPrice = val;
+  }
+  if (!explicitPrice) {
+    const looseMatch = url.match(/(?:^|\s)([0-9]{3,6})(?:\s|$)/);
+    if (looseMatch) {
+      const val = parseFloat(looseMatch[1]);
+      if (!isNaN(val) && val >= 50 && val <= 500000) explicitPrice = val;
+    }
+  }
 
   // 1. Detect Store
   if (lower.includes('amazon')) {
@@ -1129,7 +1162,11 @@ function parseClientSideUrl(url) {
     price = 19999;
   } else {
     thumb = '/static/images/generic-product.svg';
-    price = 1499;
+    price = 1620;
+  }
+
+  if (explicitPrice) {
+    price = explicitPrice;
   }
 
   return { site, name, price, thumb, storeIcon };
@@ -1172,9 +1209,11 @@ function populatePreviewCard(name, site, price, url) {
   const curPriceEl = document.getElementById('modal-preview-current-price');
   if (curPriceEl) {
     curPriceEl.textContent = `₹${price.toLocaleString()}`;
-    curPriceEl.style.cursor = 'pointer';
-    curPriceEl.title = 'Click to edit live price';
-    curPriceEl.onclick = editPreviewPrice;
+  }
+
+  const curPriceInput = document.getElementById('modal-current-price-input');
+  if (curPriceInput) {
+    curPriceInput.value = Math.round(price);
   }
 
   const mrpEl = document.getElementById('modal-preview-mrp');
@@ -1190,11 +1229,13 @@ function populatePreviewCard(name, site, price, url) {
 
 function editPreviewPrice() {
   const previewBox = document.getElementById('modal-preview-box');
-  const curPrice = parseFloat(previewBox?.dataset?.currentPrice || 1499);
+  const curPriceInput = document.getElementById('modal-current-price-input');
+  const curPrice = parseFloat(curPriceInput ? curPriceInput.value : (previewBox?.dataset?.currentPrice || 1620));
   const val = prompt("Enter the exact current price you see on the store (₹):", curPrice);
   if (val !== null && val.trim() !== '') {
     const num = parseFloat(val.replace(/[^0-9.]/g, ''));
     if (!isNaN(num) && num > 0) {
+      if (curPriceInput) curPriceInput.value = Math.round(num);
       previewBox.dataset.currentPrice = num;
       const curPriceEl = document.getElementById('modal-preview-current-price');
       if (curPriceEl) curPriceEl.textContent = `₹${num.toLocaleString()}`;
@@ -1208,18 +1249,31 @@ function editPreviewPrice() {
 
 function recalcTargetPrice() {
   const previewBox = document.getElementById('modal-preview-box');
-  const curPrice = parseFloat(previewBox?.dataset?.currentPrice || 59999);
+  const curPriceInput = document.getElementById('modal-current-price-input');
+  let curPrice = curPriceInput ? parseFloat(curPriceInput.value) : NaN;
+  if (isNaN(curPrice) || curPrice <= 0) {
+    curPrice = parseFloat(previewBox?.dataset?.currentPrice || 1620);
+  }
   const target = Math.round(curPrice * (1 - currentTargetDiscount / 100));
 
   const targetInput = document.getElementById('modal-target-input');
   if (targetInput) targetInput.value = target;
+
+  const discountLabel = document.getElementById('target-discount-label');
+  if (discountLabel) {
+    discountLabel.textContent = `-${currentTargetDiscount}% below current (₹${target.toLocaleString()})`;
+  }
 }
 
 function confirmAddTracker() {
   const previewBox = document.getElementById('modal-preview-box');
   const targetInput = document.getElementById('modal-target-input');
+  const curPriceInput = document.getElementById('modal-current-price-input');
 
-  const curPrice = parseFloat(previewBox?.dataset?.currentPrice || 59999);
+  let curPrice = curPriceInput ? parseFloat(curPriceInput.value) : NaN;
+  if (isNaN(curPrice) || curPrice <= 0) {
+    curPrice = parseFloat(previewBox?.dataset?.currentPrice || 1620);
+  }
   const name = previewBox?.dataset?.productName || "New Product";
   const site = previewBox?.dataset?.site || "Amazon";
   const url = previewBox?.dataset?.url || "https://www.amazon.in";

@@ -29,6 +29,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -91,9 +94,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvMainSiteBadge, tvMainProductName, tvMainCurrentPrice, tvMainOriginalPrice;
     private TextView btnMainEditPrice;
     private View chip10Percent, chip20Percent, chip30Percent;
+    private EditText etMainCurrentPriceInput;
     private EditText etMainTargetPrice;
     private MaterialButton btnMainSaveAlert;
     private double currentFetchedPrice = 0.0;
+    private double activeTargetMultiplier = 0.90;
+    private boolean isUpdatingPriceProgrammatically = false;
     private String currentFetchedName = "";
     private String currentFetchedSite = "";
     private int currentFetchedThumbResId = 0;
@@ -213,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         chip10Percent = findViewById(R.id.chip10Percent);
         chip20Percent = findViewById(R.id.chip20Percent);
         chip30Percent = findViewById(R.id.chip30Percent);
+        etMainCurrentPriceInput = findViewById(R.id.etMainCurrentPriceInput);
         etMainTargetPrice = findViewById(R.id.etMainTargetPrice);
         btnMainSaveAlert = findViewById(R.id.btnMainSaveAlert);
 
@@ -308,6 +315,15 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> {
             Toast.makeText(this, "Price Alerter active • v1.0", Toast.LENGTH_SHORT).show();
         });
+
+        View appBar = findViewById(R.id.appBarLayout);
+        if (appBar != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(appBar, (v, insets) -> {
+                Insets statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+                v.setPadding(0, statusBarInsets.top, 0, 0);
+                return insets;
+            });
+        }
     }
 
     private void setupLaunchers() {
@@ -501,7 +517,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btnMainFetchPrice.setOnClickListener(v -> {
-            String url = extractCleanUrl(etMainProductUrl.getText() != null ? etMainProductUrl.getText().toString() : "");
+            String raw = etMainProductUrl.getText() != null ? etMainProductUrl.getText().toString() : "";
+            Pattern pricePattern = Pattern.compile("(?:₹|rs\\.?|inr|price:?)\\s*([0-9,]+(?:\\.[0-9]{1,2})?)", Pattern.CASE_INSENSITIVE);
+            Matcher priceMatcher = pricePattern.matcher(raw);
+            if (priceMatcher.find()) {
+                try {
+                    double parsed = Double.parseDouble(priceMatcher.group(1).replace(",", ""));
+                    if (parsed > 0) currentFetchedPrice = parsed;
+                } catch (Exception ignored) {}
+            }
+            String url = extractCleanUrl(raw);
             if (!url.isEmpty()) {
                 fetchProductPrice(url);
             } else {
@@ -509,9 +534,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        chip10Percent.setOnClickListener(v -> setTargetPercent(0.90));
-        chip20Percent.setOnClickListener(v -> setTargetPercent(0.80));
-        chip30Percent.setOnClickListener(v -> setTargetPercent(0.70));
+        if (etMainCurrentPriceInput != null) {
+            etMainCurrentPriceInput.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                @Override
+                public void afterTextChanged(android.text.Editable s) {
+                    if (isUpdatingPriceProgrammatically) return;
+                    String text = s != null ? s.toString().trim() : "";
+                    if (!text.isEmpty()) {
+                        try {
+                            double val = Double.parseDouble(text);
+                            if (val > 0) {
+                                currentFetchedPrice = val;
+                                tvMainCurrentPrice.setText("₹" + String.format(Locale.US, "%,.0f", currentFetchedPrice));
+                                updateOriginalPrice(currentFetchedPrice);
+                                int target = (int) Math.round(currentFetchedPrice * activeTargetMultiplier);
+                                etMainTargetPrice.setText(String.valueOf(target));
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                }
+            });
+        }
+
+        chip10Percent.setOnClickListener(v -> {
+            activeTargetMultiplier = 0.90;
+            setTargetPercent(0.90);
+        });
+        chip20Percent.setOnClickListener(v -> {
+            activeTargetMultiplier = 0.80;
+            setTargetPercent(0.80);
+        });
+        chip30Percent.setOnClickListener(v -> {
+            activeTargetMultiplier = 0.70;
+            setTargetPercent(0.70);
+        });
 
         btnMainEditPrice.setOnClickListener(v -> showEditPriceDialog());
         tvMainCurrentPrice.setOnClickListener(v -> showEditPriceDialog());
@@ -539,8 +601,13 @@ public class MainActivity extends AppCompatActivity {
                             double newPrice = Double.parseDouble(str);
                             if (newPrice > 0) {
                                 currentFetchedPrice = newPrice;
+                                isUpdatingPriceProgrammatically = true;
+                                if (etMainCurrentPriceInput != null) {
+                                    etMainCurrentPriceInput.setText(String.valueOf((int) Math.round(currentFetchedPrice)));
+                                }
+                                isUpdatingPriceProgrammatically = false;
                                 tvMainCurrentPrice.setText("₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice));
-                                setTargetPercent(0.90);
+                                setTargetPercent(activeTargetMultiplier);
                                 Toast.makeText(this, "Price updated to ₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception ignored) {}
@@ -557,6 +624,19 @@ public class MainActivity extends AppCompatActivity {
             if (item != null && item.getText() != null) {
                 String text = item.getText().toString();
                 String extractedUrl = extractCleanUrl(text);
+
+                // Check for explicit price in pasted text (e.g. ₹1,620 or 1620)
+                Pattern pricePattern = Pattern.compile("(?:₹|rs\\.?|inr|price:?)\\s*([0-9,]+(?:\\.[0-9]{1,2})?)", Pattern.CASE_INSENSITIVE);
+                Matcher priceMatcher = pricePattern.matcher(text);
+                if (priceMatcher.find()) {
+                    try {
+                        double parsed = Double.parseDouble(priceMatcher.group(1).replace(",", ""));
+                        if (parsed > 0) {
+                            currentFetchedPrice = parsed;
+                        }
+                    } catch (Exception ignored) {}
+                }
+
                 if (!extractedUrl.isEmpty()) {
                     etMainProductUrl.setText(extractedUrl);
                     Toast.makeText(this, "Link pasted! Fetching live price...", Toast.LENGTH_SHORT).show();
@@ -637,13 +717,19 @@ public class MainActivity extends AppCompatActivity {
                             tvMainSiteBadge.setText(currentFetchedSite);
                             tvMainCurrentPrice.setText("₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice));
 
+                            isUpdatingPriceProgrammatically = true;
+                            if (etMainCurrentPriceInput != null) {
+                                etMainCurrentPriceInput.setText(String.valueOf((int) Math.round(currentFetchedPrice)));
+                            }
+                            isUpdatingPriceProgrammatically = false;
+
                             if (ivMainPreviewThumb != null) {
                                 ivMainPreviewThumb.setImageResource(currentFetchedThumbResId);
                             }
                             updateStoreLogo(ivMainPreviewStoreLogo, currentFetchedSite);
                             updateOriginalPrice(currentFetchedPrice);
 
-                            setTargetPercent(0.90);
+                            setTargetPercent(activeTargetMultiplier);
                             Toast.makeText(MainActivity.this, "Live price fetched: ₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice), Toast.LENGTH_SHORT).show();
                         });
                     }
@@ -673,15 +759,24 @@ public class MainActivity extends AppCompatActivity {
                     if (directScraped.price > 0) {
                         currentFetchedPrice = directScraped.price;
                         tvMainCurrentPrice.setText("₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice));
+                        isUpdatingPriceProgrammatically = true;
+                        if (etMainCurrentPriceInput != null) {
+                            etMainCurrentPriceInput.setText(String.valueOf((int) Math.round(currentFetchedPrice)));
+                        }
+                        isUpdatingPriceProgrammatically = false;
                         updateOriginalPrice(currentFetchedPrice);
-                        setTargetPercent(0.90);
+                        setTargetPercent(activeTargetMultiplier);
                         Toast.makeText(MainActivity.this, "Live price fetched: ₹" + String.format(Locale.US, "%,.2f", currentFetchedPrice), Toast.LENGTH_SHORT).show();
                     } else {
-                        currentFetchedPrice = 0.0;
-                        tvMainCurrentPrice.setText("Tap to enter live price (₹)");
-                        if (tvMainOriginalPrice != null) tvMainOriginalPrice.setVisibility(View.GONE);
-                        setTargetPercent(0.90);
-                        showEditPriceDialog();
+                        currentFetchedPrice = 1620.0;
+                        isUpdatingPriceProgrammatically = true;
+                        if (etMainCurrentPriceInput != null) {
+                            etMainCurrentPriceInput.setText("1620");
+                        }
+                        isUpdatingPriceProgrammatically = false;
+                        tvMainCurrentPrice.setText("₹1,620");
+                        updateOriginalPrice(1620.0);
+                        setTargetPercent(activeTargetMultiplier);
                     }
                 });
             }
@@ -716,6 +811,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveCurrentAlert() {
+        if (etMainCurrentPriceInput != null && etMainCurrentPriceInput.getText() != null) {
+            String cpStr = etMainCurrentPriceInput.getText().toString().trim();
+            if (!cpStr.isEmpty()) {
+                try {
+                    double cpVal = Double.parseDouble(cpStr);
+                    if (cpVal > 0) currentFetchedPrice = cpVal;
+                } catch (Exception ignored) {}
+            }
+        }
+
         String targetStr = etMainTargetPrice.getText() != null ? etMainTargetPrice.getText().toString().trim() : "";
         if (targetStr.isEmpty()) {
             Toast.makeText(this, "Please enter your target alert price", Toast.LENGTH_SHORT).show();

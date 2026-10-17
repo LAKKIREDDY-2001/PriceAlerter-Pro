@@ -584,17 +584,31 @@
                                 <span>Amazon</span>
                             </div>
                             <div class="preview-price-row">
-                                <span class="preview-current-price" id="modal-preview-current-price" onclick="editPreviewPrice()" title="Click to edit live price">₹59,999</span>
+                                <span class="preview-current-price" id="modal-preview-current-price" title="Live price">₹59,999</span>
                                 <span class="preview-strike-price" id="modal-preview-mrp">₹69,000</span>
                                 <span class="in-stock-pill">In Stock</span>
-                                <button type="button" onclick="editPreviewPrice()" style="background:none;border:none;color:#2563eb;font-size:12px;font-weight:600;cursor:pointer;margin-left:6px;"><i class="fa fa-pencil"></i> Edit Price</button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2.5: Confirm / Edit Live Current Price -->
+                    <div class="form-group" style="margin-top:14px; margin-bottom:14px;">
+                        <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>Current Store Price (₹)</span>
+                            <span style="font-size:11px; font-weight:normal; color:var(--text-muted);">Change if store shows different</span>
+                        </label>
+                        <div class="target-input-wrap">
+                            <span class="currency-symbol-fixed">₹</span>
+                            <input type="number" id="modal-current-price-input" class="target-price-input" placeholder="1620" value="1620">
                         </div>
                     </div>
 
                     <!-- Step 3: Set Target Price -->
                     <div class="form-group">
-                        <label class="form-label">Set Target Price</label>
+                        <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>Set Target Price (₹)</span>
+                            <span id="target-discount-label" style="font-size:11px; font-weight:600; color:var(--accent);">-10% below current</span>
+                        </label>
                         <div class="target-input-wrap">
                             <span class="currency-symbol-fixed">₹</span>
                             <input type="number" id="modal-target-input" class="target-price-input" value="55000">
