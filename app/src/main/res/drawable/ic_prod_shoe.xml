@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Soft Background Container -->
+    <path
+        android:pathData="M8,4 L40,4 C42.2,4 44,5.8 44,8 L44,40 C44,42.2 42.2,44 40,44 L8,44 C5.8,44 4,42.2 4,40 L4,8 C4,5.8 5.8,4 8,4 Z"
+        android:fillColor="#F1F5F9" />
+    <!-- Running Sneaker / Shoe Silhouette -->
+    <path
+        android:pathData="M10,31 C10,31 11,28 14,27 C17,26 21,25 24,20 C26,17 28,14 31,14 C33,14 34,16 35,18 C36,20 37,23 40,26 C42,28 42,30 42,31 L10,31 Z"
+        android:fillColor="#2563EB" />
+    <!-- Sneaker Outsole -->
+    <path
+        android:pathData="M8,31 L42,31 C43.1,31 44,31.9 44,33 L44,35 C44,36.1 43.1,37 42,37 L8,37 C6.9,37 6,36.1 6,35 L6,33 C6,31.9 6.9,31 8,31 Z"
+        android:fillColor="#059669" />
+    <!-- Lace Accent -->
+    <path
+        android:pathData="M24,21 L29,18 M23,24 L28,21 M22,27 L27,24"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round" />
+</vector>

@@ -109,11 +109,14 @@ public class TrackerItem {
     }
 
     public int getThumbResId() {
-        String lower = productName.toLowerCase();
-        if (lower.contains("iphone") || lower.contains("phone")) return R.drawable.ic_prod_iphone;
-        if (lower.contains("sony") || lower.contains("headphone") || lower.contains("earbud")) return R.drawable.ic_prod_sony;
-        if (lower.contains("tv") || lower.contains("samsung")) return R.drawable.ic_prod_tv;
-        if (lower.contains("watch")) return R.drawable.ic_prod_watch;
+        String lower = (productName != null ? productName : "").toLowerCase();
+        if (lower.contains("shoe") || lower.contains("skechers") || lower.contains("sneaker") || lower.contains("nike") || lower.contains("puma") || lower.contains("footwear") || lower.contains("summits")) {
+            return R.drawable.ic_prod_shoe;
+        }
+        if (lower.contains("iphone") || lower.contains("phone") || lower.contains("mobile") || lower.contains("galaxy")) return R.drawable.ic_prod_iphone;
+        if (lower.contains("sony") || lower.contains("headphone") || lower.contains("earbud") || lower.contains("audio") || lower.contains("boat")) return R.drawable.ic_prod_sony;
+        if (lower.contains("tv") || lower.contains("samsung") || lower.contains("television")) return R.drawable.ic_prod_tv;
+        if (lower.contains("watch") || lower.contains("band")) return R.drawable.ic_prod_watch;
         return R.drawable.ic_prod_iphone;
     }
 
@@ -131,4 +134,7 @@ public class TrackerItem {
     public String getSite() { return site; }
     public String getCreatedAt() { return createdAt; }
     public int getAlertSent() { return alertSent; }
+    public void setAlertSent(int alertSent) { this.alertSent = alertSent; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setLastChecked(String lastChecked) { this.createdAt = lastChecked; }
 }

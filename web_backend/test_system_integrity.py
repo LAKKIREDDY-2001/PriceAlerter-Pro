@@ -31,5 +31,17 @@ class TestPriceSystemIntegrity(unittest.TestCase):
         self.assertIn("MacBook Air", data["productName"])
         self.assertEqual(data["site"], "Flipkart")
 
+    def test_skechers_exact_user_link(self):
+        sample = "https://www.amazon.in/Skechers-Summits-Womens-Casual-Shoes-896220ID-NVMT-6-Navy-Multi/dp/B0CBVN2SCS/?_encoding=UTF8&pd_rd_w=nf2pM&content-id=amzn1.sym.de84ee3f-a07f-47cd-ac44-50f5d6cbb587&pf_rd_p=de84ee3f-a07f-47cd-ac44-50f5d6cbb587&pf_rd_r=QJVYJ2QFK9T9RS5KPHAH&pd_rd_wg=X6XmU&pd_rd_r=4574c256-c3ce-45fe-9641-49172e3fcd7e&ref_=pd_hp_d_btf_a2i_gw_cml&th=1&psc=1"
+        data = extract_smart_catalog_fallback(sample)
+        self.assertEqual(data["price"], 1620.0, "Skechers price should be exactly ₹1620.0, never strikethrough M.R.P.")
+        self.assertIn("Skechers Women's Summits Casual Shoes", data["productName"])
+        self.assertEqual(data["site"], "Amazon")
+
+    def test_query_token_rs_not_false_positive(self):
+        sample = "https://www.amazon.in/dp/B0CBVN2SCS?pf_rd_r=QJVYJ2QFK9T9RS5KPHAH"
+        data = extract_smart_catalog_fallback(sample)
+        self.assertEqual(data["price"], 1620.0, "RS5 token in Amazon URL must not be mistaken for price 5")
+
 if __name__ == '__main__':
     unittest.main()

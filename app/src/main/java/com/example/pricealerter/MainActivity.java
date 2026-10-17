@@ -1388,6 +1388,87 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // ==========================================
+    // CONTINUOUS REAL-TIME LIVE PRICE TRACKER & ALARM
+    // ==========================================
+    private final Handler liveTrackingHandler = new Handler(Looper.getMainLooper());
+    private boolean isLiveTrackingActive = false;
+
+    private final Runnable livePriceTrackerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            checkTrackedPricesLive();
+            if (isLiveTrackingActive) {
+                // Poll every 10 seconds for real-time live price tracking and instant alarms
+                liveTrackingHandler.postDelayed(this, 10000);
+            }
+        }
+    };
+
+    private void checkTrackedPricesLive() {
+        if (trackerRepo == null) return;
+        trackerRepo.fetchTrackers(new TrackerRepository.RepositoryCallback<List<TrackerItem>>() {
+            @Override
+            public void onSuccess(List<TrackerItem> items) {
+                if (items == null || items.isEmpty()) return;
+                executor.execute(() -> {
+                    for (TrackerItem item : items) {
+                        String url = item.getUrl();
+                        if (url == null || url.trim().isEmpty()) continue;
+                        LivePriceScraper.ScrapedProduct scraped = LivePriceScraper.scrapeDirectly(url);
+                        if (scraped != null && scraped.price > 0) {
+                            double newPrice = scraped.price;
+                            double target = item.getTargetPrice();
+                            boolean priceChanged = (Math.abs(newPrice - item.getCurrentPrice()) >= 0.01);
+
+                            if (priceChanged) {
+                                item.setCurrentPrice(newPrice);
+                                item.setLastChecked("Just now");
+                                trackerRepo.updateTracker(item, null);
+                            }
+
+                            // If price reached or went below target price and alert not yet sent
+                            if (newPrice <= target && item.getAlertSent() == 0) {
+                                item.setAlertSent(1);
+                                trackerRepo.updateTracker(item, null);
+                                mainHandler.post(() -> {
+                                    NotificationHelper.sendPriceAlert(
+                                            MainActivity.this,
+                                            "🚨 PRICE DROP ALARM! 🎯",
+                                            "TARGET REACHED! " + item.getProductName() + " dropped to ₹" + String.format(Locale.US, "%,.2f", newPrice) + " (Target: ₹" + String.format(Locale.US, "%,.0f", target) + ")!",
+                                            url
+                                    );
+                                    new CelebrationDialog(MainActivity.this, item).show();
+                                    refreshTrackersList();
+                                });
+                            } else if (priceChanged) {
+                                mainHandler.post(() -> refreshTrackersList());
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {}
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isLiveTrackingActive = true;
+        liveTrackingHandler.removeCallbacks(livePriceTrackerRunnable);
+        liveTrackingHandler.postDelayed(livePriceTrackerRunnable, 2000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isLiveTrackingActive = false;
+        liveTrackingHandler.removeCallbacks(livePriceTrackerRunnable);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -1398,6 +1479,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isLiveTrackingActive = false;
+        liveTrackingHandler.removeCallbacks(livePriceTrackerRunnable);
         executor.shutdown();
     }
 }

@@ -204,6 +204,20 @@ public class TrackerRepository {
         });
     }
 
+    public void updateTracker(TrackerItem item, RepositoryCallback<TrackerItem> callback) {
+        List<TrackerItem> localList = getCachedTrackers();
+        for (int i = 0; i < localList.size(); i++) {
+            if (localList.get(i).getId() == item.getId()) {
+                localList.set(i, item);
+                break;
+            }
+        }
+        saveLocalTrackers(localList);
+        if (callback != null) {
+            mainHandler.post(() -> callback.onSuccess(item));
+        }
+    }
+
     public void deleteTracker(int id, RepositoryCallback<Boolean> callback) {
         List<TrackerItem> localList = getCachedTrackers();
         TrackerItem toRemove = null;
