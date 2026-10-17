@@ -3,15 +3,15 @@
     <item
         android:id="@+id/nav_trackers"
         android:icon="@drawable/ic_nav_trackers"
-        android:title="Alerts" />
+        android:title="Home" />
     <item
         android:id="@+id/nav_quick_add"
         android:icon="@drawable/ic_nav_add"
-        android:title="Track" />
+        android:title="Tracked" />
     <item
         android:id="@+id/nav_compare"
-        android:icon="@drawable/ic_nav_compare"
-        android:title="AI Compare" />
+        android:icon="@drawable/ic_bell"
+        android:title="Alerts" />
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_nav_settings"
