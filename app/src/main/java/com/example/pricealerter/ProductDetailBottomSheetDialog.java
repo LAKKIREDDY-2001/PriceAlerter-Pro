@@ -57,7 +57,7 @@ public class ProductDetailBottomSheetDialog extends BottomSheetDialog {
         double cur = item.getCurrentPrice();
         double tgt = item.getTargetPrice();
 
-        if (ivThumb != null) ivThumb.setImageResource(item.getThumbResId());
+        if (ivThumb != null) ImageLoader.load(ivThumb, item.getImageUrl(), item.getThumbResId());
         if (tvTitle != null) tvTitle.setText(item.getProductName());
 
         String site = item.getSite() != null ? item.getSite().toLowerCase() : "";

@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
-  <rect width="24" height="24" rx="6" fill="#2874f0" fill-opacity="0.15"/>
-  <text x="8" y="16" font-family="sans-serif" font-weight="900" font-size="14" fill="#2874f0">f</text>
-  <path d="M13 8 L16 8 M14 11 L16 11" stroke="#ffe500" stroke-width="1.8" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <rect width="48" height="48" rx="12" fill="#2874F0"/>
+  <!-- Shopping bag handle -->
+  <path d="M20 12c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#FFE500" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Bag body -->
+  <path d="M14 15h20l-2 22H16L14 15z" fill="#2874F0"/>
+  <!-- White/Yellow F speed icon -->
+  <path d="M22 17h8l-1.2 3.5h-4.3l-.8 2.5h3.6l-1.2 3.5h-3.6l-2.2 7h-4.2l5.7-16.5z" fill="#FFE500"/>
+  <!-- Speed lines -->
+  <path d="M12 21h4M10 25h4M12 29h4" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
 </svg>

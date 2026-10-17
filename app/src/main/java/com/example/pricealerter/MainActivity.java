@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private String currentFetchedName = "";
     private String currentFetchedSite = "";
     private int currentFetchedThumbResId = 0;
+    private String currentFetchedImageUrl = null;
 
     // Tab 3: Alerts (Figma Mobile 4) & AI Product Comparison
     private TextView pillAlertAll, pillAlertDrops, pillAlertHikes;
@@ -705,6 +706,7 @@ public class MainActivity extends AppCompatActivity {
                         currentFetchedPrice = price;
                         currentFetchedSite = res.optString("site", TrackerItem.detectSite(productUrl));
                         currentFetchedThumbResId = LivePriceScraper.pickThumbnail(currentFetchedName, currentFetchedSite);
+                        currentFetchedImageUrl = res.optString("imageUrl", null);
                         fetchedSuccessfully = true;
 
                         mainHandler.post(() -> {
@@ -724,7 +726,7 @@ public class MainActivity extends AppCompatActivity {
                             isUpdatingPriceProgrammatically = false;
 
                             if (ivMainPreviewThumb != null) {
-                                ivMainPreviewThumb.setImageResource(currentFetchedThumbResId);
+                                ImageLoader.load(ivMainPreviewThumb, currentFetchedImageUrl, currentFetchedThumbResId);
                             }
                             updateStoreLogo(ivMainPreviewStoreLogo, currentFetchedSite);
                             updateOriginalPrice(currentFetchedPrice);
@@ -748,11 +750,12 @@ public class MainActivity extends AppCompatActivity {
                     currentFetchedSite = directScraped.site;
                     currentFetchedName = directScraped.name;
                     currentFetchedThumbResId = directScraped.thumbResId;
+                    currentFetchedImageUrl = directScraped.imageUrl;
                     tvMainSiteBadge.setText(currentFetchedSite);
                     tvMainProductName.setText(currentFetchedName);
 
                     if (ivMainPreviewThumb != null) {
-                        ivMainPreviewThumb.setImageResource(currentFetchedThumbResId);
+                        ImageLoader.load(ivMainPreviewThumb, currentFetchedImageUrl, currentFetchedThumbResId);
                     }
                     updateStoreLogo(ivMainPreviewStoreLogo, currentFetchedSite);
 
@@ -831,7 +834,6 @@ public class MainActivity extends AppCompatActivity {
         String productUrl = extractCleanUrl(etMainProductUrl.getText() != null ? etMainProductUrl.getText().toString() : "");
 
         double effectiveCurrentPrice = currentFetchedPrice > 0 ? currentFetchedPrice : targetPrice * 1.1;
-        int thumb = currentFetchedThumbResId > 0 ? currentFetchedThumbResId : LivePriceScraper.pickThumbnail(currentFetchedName, currentFetchedSite);
 
         TrackerItem newItem = new TrackerItem(
                 (int) System.currentTimeMillis(),
@@ -843,8 +845,11 @@ public class MainActivity extends AppCompatActivity {
                 "₹",
                 currentFetchedSite,
                 "Just now",
-                thumb
+                0,
+                currentFetchedImageUrl
         );
+
+        checkNotificationPermission();
 
         trackerRepo.addTracker(newItem, new TrackerRepository.RepositoryCallback<TrackerItem>() {
             @Override
@@ -853,22 +858,25 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isMet) {
                     // Send High-Priority Notification Message & Trigger Celebration Theme
-                    NotificationHelper.sendPriceAlert(
+                    NotificationHelper.sendTargetReachedAlert(
                             MainActivity.this,
-                            "🎉 TARGET PRICE REACHED! 🚀",
-                            "Great news! " + result.getProductName() + " has reached your target of ₹" + targetStr + " (Current: ₹" + String.format(Locale.US, "%,.2f", result.getCurrentPrice()) + ")! Tap to buy now.",
+                            result.getProductName(),
+                            result.getCurrentPrice(),
+                            result.getTargetPrice(),
+                            result.getCurrencySymbol(),
                             productUrl
                     );
 
                     new CelebrationDialog(MainActivity.this, result).show();
                 } else {
-                    NotificationHelper.sendPriceAlert(
+                    NotificationHelper.sendTargetAddedAlert(
                             MainActivity.this,
-                            "Price Alert Activated! 🔔",
-                            "We'll notify you when " + result.getProductName() + " drops to ₹" + targetStr,
+                            result.getProductName(),
+                            result.getTargetPrice(),
+                            result.getCurrencySymbol(),
                             productUrl
                     );
-                    Toast.makeText(MainActivity.this, "Price alert created successfully!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "🎯 Price alert activated for " + result.getProductName(), Toast.LENGTH_LONG).show();
                 }
 
                 // Clear input and switch to Dashboard Tab
@@ -949,7 +957,7 @@ public class MainActivity extends AppCompatActivity {
         // Alert Card 1 Actions (iPhone 15 Drop)
         if (btnAlert1View != null) {
             btnAlert1View.setOnClickListener(v -> {
-                TrackerItem dummyItem = new TrackerItem(101, "https://www.amazon.in/dp/B0CHX1W1XY", "Apple iPhone 15 (128GB)", 54999, 55000, "INR", "₹", "Amazon", "2 hours ago", R.drawable.ic_prod_iphone);
+                TrackerItem dummyItem = new TrackerItem(101, "https://www.amazon.in/dp/B0CHX1W1XY", "Apple iPhone 15 (128GB)", 54999, 55000, "INR", "₹", "Amazon", "2 hours ago", 1);
                 new CelebrationDialog(this, dummyItem).show();
             });
         }
@@ -966,7 +974,7 @@ public class MainActivity extends AppCompatActivity {
         // Alert Card 2 Actions (Sony WH-1000XM5 Drop)
         if (btnAlert2View != null) {
             btnAlert2View.setOnClickListener(v -> {
-                TrackerItem dummyItem = new TrackerItem(102, "https://www.amazon.in/dp/B09XS7JWHH", "Sony WH-1000XM5", 19999, 20000, "INR", "₹", "Amazon", "5 hours ago", R.drawable.ic_prod_sony);
+                TrackerItem dummyItem = new TrackerItem(102, "https://www.amazon.in/dp/B09XS7JWHH", "Sony WH-1000XM5", 19999, 20000, "INR", "₹", "Amazon", "5 hours ago", 1);
                 new CelebrationDialog(this, dummyItem).show();
             });
         }
@@ -983,7 +991,7 @@ public class MainActivity extends AppCompatActivity {
         // Alert Card 3 Actions (Samsung TV Hike)
         if (btnAlert3View != null) {
             btnAlert3View.setOnClickListener(v -> {
-                TrackerItem dummyItem = new TrackerItem(103, "https://www.flipkart.com/samsung-55-4k-tv", "Samsung 55\" 4K TV", 45990, 44500, "INR", "₹", "Flipkart", "1 day ago", R.drawable.ic_prod_tv);
+                TrackerItem dummyItem = new TrackerItem(103, "https://www.flipkart.com/samsung-55-4k-tv", "Samsung 55\" 4K TV", 45990, 44500, "INR", "₹", "Flipkart", "1 day ago", 0);
                 new ProductDetailBottomSheetDialog(this, dummyItem).show();
             });
         }
@@ -1000,7 +1008,7 @@ public class MainActivity extends AppCompatActivity {
         // Alert Card 4 Actions (Apple Watch Drop)
         if (btnAlert4View != null) {
             btnAlert4View.setOnClickListener(v -> {
-                TrackerItem dummyItem = new TrackerItem(104, "https://www.flipkart.com/apple-watch-series-9", "Apple Watch Series 9", 34999, 35000, "INR", "₹", "Flipkart", "2 days ago", R.drawable.ic_prod_watch);
+                TrackerItem dummyItem = new TrackerItem(104, "https://www.flipkart.com/apple-watch-series-9", "Apple Watch Series 9", 34999, 35000, "INR", "₹", "Flipkart", "2 days ago", 1);
                 new CelebrationDialog(this, dummyItem).show();
             });
         }
@@ -1432,10 +1440,12 @@ public class MainActivity extends AppCompatActivity {
                                 item.setAlertSent(1);
                                 trackerRepo.updateTracker(item, null);
                                 mainHandler.post(() -> {
-                                    NotificationHelper.sendPriceAlert(
+                                    NotificationHelper.sendTargetReachedAlert(
                                             MainActivity.this,
-                                            "🚨 PRICE DROP ALARM! 🎯",
-                                            "TARGET REACHED! " + item.getProductName() + " dropped to ₹" + String.format(Locale.US, "%,.2f", newPrice) + " (Target: ₹" + String.format(Locale.US, "%,.0f", target) + ")!",
+                                            item.getProductName(),
+                                            newPrice,
+                                            target,
+                                            item.getCurrencySymbol(),
                                             url
                                     );
                                     new CelebrationDialog(MainActivity.this, item).show();

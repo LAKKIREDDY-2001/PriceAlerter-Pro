@@ -70,8 +70,8 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.ViewHold
             holder.ivSiteLogo.setImageResource(R.drawable.ic_store_generic);
         }
 
-        // Product Thumbnail
-        holder.ivThumb.setImageResource(item.getThumbResId());
+        // Product Thumbnail (Load real product photo with vector fallback)
+        ImageLoader.load(holder.ivThumb, item.getImageUrl(), item.getThumbResId());
 
         // Current & Target Prices
         String symbol = item.getCurrencySymbol() != null ? item.getCurrencySymbol() : "₹";

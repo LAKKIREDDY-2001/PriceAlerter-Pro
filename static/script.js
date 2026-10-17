@@ -35,7 +35,7 @@ const SEED_TRACKERS = [
     shortName: "iPhone 15 (128GB)",
     site: "Amazon",
     storeIcon: "/static/images/amazon.svg",
-    thumbnail: "/static/images/iphone15.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg",
     currentPrice: 59999,
     mrp: 69000,
     targetPrice: 55000,
@@ -65,7 +65,7 @@ const SEED_TRACKERS = [
     shortName: "Sony WH-1000XM5",
     site: "Flipkart",
     storeIcon: "/static/images/flipkart.svg",
-    thumbnail: "/static/images/sony-headphones.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg",
     currentPrice: 24999,
     mrp: 29990,
     targetPrice: 20000,
@@ -88,7 +88,7 @@ const SEED_TRACKERS = [
     shortName: 'Samsung 55" 4K TV',
     site: "Amazon",
     storeIcon: "/static/images/amazon.svg",
-    thumbnail: "/static/images/samsung-tv.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg",
     currentPrice: 45990,
     mrp: 52990,
     targetPrice: 40000,
@@ -111,7 +111,7 @@ const SEED_TRACKERS = [
     shortName: "Apple Watch Series 9",
     site: "Flipkart",
     storeIcon: "/static/images/flipkart.svg",
-    thumbnail: "/static/images/apple-watch.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg",
     currentPrice: 41999,
     mrp: 44900,
     targetPrice: 35000,
@@ -126,10 +126,47 @@ const SEED_TRACKERS = [
       { date: "Sep 12", price: 42500 },
       { date: "Sep 24", price: 41999 }
     ]
+  },
+  {
+    id: 5,
+    productName: "Skechers Women's Summits Casual Shoes",
+    shortName: "Skechers Summits Shoes",
+    site: "Amazon",
+    storeIcon: "/static/images/amazon.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg",
+    currentPrice: 1620,
+    mrp: 3999,
+    targetPrice: 1650,
+    currency: "INR",
+    currencySymbol: "₹",
+    status: "below",
+    statusLabel: "Below Target 🎯",
+    change: -59.5,
+    inStock: true,
+    url: "https://www.amazon.in/Skechers-Summits-Womens-Casual-Shoes-896220ID-NVMT-6-Navy-Multi/dp/B0CBVN2SCS/",
+    createdAt: new Date().toISOString(),
+    history: [
+      { date: "Oct 1", price: 3999 },
+      { date: "Oct 8", price: 3499 },
+      { date: "Oct 14", price: 2199 },
+      { date: "Today", price: 1620 }
+    ]
   }
 ];
 
 const SEED_ALERTS = [
+  {
+    id: 100,
+    productId: 5,
+    title: "Skechers Women's Summits Shoes",
+    desc: "Dropped to ₹1,620 (M.R.P. ₹3,999 - Save 59%)!",
+    time: "Just now",
+    type: "drop",
+    statusIcon: "success",
+    thumbnail: "https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg",
+    url: "https://www.amazon.in/Skechers-Summits-Womens-Casual-Shoes-896220ID-NVMT-6-Navy-Multi/dp/B0CBVN2SCS/",
+    active: true
+  },
   {
     id: 101,
     productId: 1,
@@ -138,7 +175,7 @@ const SEED_ALERTS = [
     time: "2 hours ago",
     type: "drop",
     statusIcon: "success",
-    thumbnail: "/static/images/iphone15.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg",
     url: "https://www.amazon.in/dp/B0CHX1W1XY",
     active: true
   },
@@ -150,7 +187,7 @@ const SEED_ALERTS = [
     time: "5 hours ago",
     type: "drop",
     statusIcon: "success",
-    thumbnail: "/static/images/sony-headphones.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg",
     url: "https://www.flipkart.com/sony-wh-1000xm5/p/itm123",
     active: true
   },
@@ -162,7 +199,7 @@ const SEED_ALERTS = [
     time: "1 day ago",
     type: "hike",
     statusIcon: "danger",
-    thumbnail: "/static/images/samsung-tv.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg",
     url: "https://www.amazon.in/dp/B09V7D3G3P",
     active: true
   },
@@ -174,7 +211,7 @@ const SEED_ALERTS = [
     time: "2 days ago",
     type: "drop",
     statusIcon: "success",
-    thumbnail: "/static/images/apple-watch.svg",
+    thumbnail: "https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg",
     url: "https://www.flipkart.com/apple-watch-series-9/p/itm456",
     active: true
   }
@@ -1029,7 +1066,7 @@ async function fetchProductUrl() {
     });
     const data = await res.json();
     if (res.ok && data.price) {
-      populatePreviewCard(data.productName || "Verified Product", data.site || "Amazon", data.price, url);
+      populatePreviewCard(data.productName || "Verified Product", data.site || "Amazon", data.price, url, data.imageUrl);
       return;
     }
   } catch (err) {
@@ -1041,7 +1078,7 @@ async function fetchProductUrl() {
 
   // Client-Side Smart Parser
   const parsed = parseClientSideUrl(url);
-  populatePreviewCard(parsed.name, parsed.site, parsed.price, url);
+  populatePreviewCard(parsed.name, parsed.site, parsed.price, url, parsed.thumb);
 }
 
 function parseClientSideUrl(url) {
@@ -1179,29 +1216,38 @@ function parseClientSideUrl(url) {
   return { site, name, price, thumb, storeIcon };
 }
 
-function populatePreviewCard(name, site, price, url) {
+function populatePreviewCard(name, site, price, url, imageUrl) {
   const previewBox = document.getElementById('modal-preview-box');
   if (!previewBox) return;
 
   setModalStep(2);
   previewBox.style.display = 'block';
 
+  let finalImg = imageUrl;
+  if (!finalImg) {
+    const nameLower = (name || '').toLowerCase();
+    if (nameLower.includes('b0cbvn2scs') || nameLower.includes('skechers') || nameLower.includes('summits')) {
+      finalImg = 'https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg';
+    } else if (nameLower.includes('iphone') || nameLower.includes('15') || nameLower.includes('apple')) {
+      finalImg = 'https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg';
+    } else if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('1000xm5')) {
+      finalImg = 'https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg';
+    } else if (nameLower.includes('tv') || nameLower.includes('samsung') || nameLower.includes('television')) {
+      finalImg = 'https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg';
+    } else if (nameLower.includes('watch') || nameLower.includes('series 9')) {
+      finalImg = 'https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg';
+    } else if (nameLower.includes('laptop') || nameLower.includes('macbook')) {
+      finalImg = '/static/images/laptop.svg';
+    } else if (nameLower.includes('shoe') || nameLower.includes('sneaker') || nameLower.includes('nike')) {
+      finalImg = '/static/images/shoes.svg';
+    } else {
+      finalImg = '/static/images/generic-product.svg';
+    }
+  }
+
   const thumbImg = document.getElementById('modal-preview-thumb');
   if (thumbImg) {
-    const nameLower = name.toLowerCase();
-    if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('boat')) {
-      thumbImg.src = '/static/images/sony-headphones.svg';
-    } else if (nameLower.includes('tv') || nameLower.includes('television')) {
-      thumbImg.src = '/static/images/samsung-tv.svg';
-    } else if (nameLower.includes('watch') || nameLower.includes('band')) {
-      thumbImg.src = '/static/images/apple-watch.svg';
-    } else if (nameLower.includes('laptop') || nameLower.includes('macbook')) {
-      thumbImg.src = '/static/images/laptop.svg';
-    } else if (nameLower.includes('shoe') || nameLower.includes('nike')) {
-      thumbImg.src = '/static/images/shoes.svg';
-    } else {
-      thumbImg.src = '/static/images/iphone15.svg';
-    }
+    thumbImg.src = finalImg;
   }
 
   const titleEl = document.getElementById('modal-preview-title');
@@ -1209,7 +1255,12 @@ function populatePreviewCard(name, site, price, url) {
 
   const storeEl = document.getElementById('modal-preview-store');
   if (storeEl) {
-    const icon = site.toLowerCase().includes('flipkart') ? '/static/images/flipkart.svg' : '/static/images/amazon.svg';
+    let icon = '/static/images/amazon.svg';
+    const sLower = (site || '').toLowerCase();
+    if (sLower.includes('flipkart')) icon = '/static/images/flipkart.svg';
+    else if (sLower.includes('myntra')) icon = '/static/images/myntra.svg';
+    else if (sLower.includes('ajio')) icon = '/static/images/ajio.svg';
+    else if (sLower.includes('meesho')) icon = '/static/images/meesho.svg';
     storeEl.innerHTML = `<img src="${icon}" class="store-icon" alt="${site}"> <span>${site}</span>`;
   }
 
@@ -1230,6 +1281,7 @@ function populatePreviewCard(name, site, price, url) {
   previewBox.dataset.productName = name;
   previewBox.dataset.site = site;
   previewBox.dataset.url = url;
+  previewBox.dataset.imageUrl = finalImg;
 
   recalcTargetPrice();
 }
@@ -1286,22 +1338,33 @@ function confirmAddTracker() {
   const url = previewBox?.dataset?.url || "https://www.amazon.in";
   const targetPrice = parseFloat(targetInput?.value || Math.round(curPrice * 0.9));
 
-  let thumb = '/static/images/generic-product.svg';
-  const nameLower = name.toLowerCase();
-  if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('boat')) thumb = '/static/images/sony-headphones.svg';
-  else if (nameLower.includes('tv') || nameLower.includes('television')) thumb = '/static/images/samsung-tv.svg';
-  else if (nameLower.includes('watch') || nameLower.includes('band')) thumb = '/static/images/apple-watch.svg';
-  else if (nameLower.includes('laptop') || nameLower.includes('macbook')) thumb = '/static/images/laptop.svg';
-  else if (nameLower.includes('shoe') || nameLower.includes('nike')) thumb = '/static/images/shoes.svg';
-  else if (nameLower.includes('mouse') || nameLower.includes('keyboard') || nameLower.includes('portronics') || nameLower.includes('toad')) thumb = '/static/images/accessory.svg';
-  else if (nameLower.includes('iphone') || nameLower.includes('phone') || nameLower.includes('galaxy')) thumb = '/static/images/iphone15.svg';
+  let thumb = previewBox?.dataset?.imageUrl || '';
+  if (!thumb) {
+    const nameLower = name.toLowerCase();
+    if (nameLower.includes('b0cbvn2scs') || nameLower.includes('skechers') || nameLower.includes('summits')) thumb = 'https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg';
+    else if (nameLower.includes('sony') || nameLower.includes('headphone') || nameLower.includes('earbud') || nameLower.includes('boat')) thumb = 'https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg';
+    else if (nameLower.includes('tv') || nameLower.includes('television')) thumb = 'https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg';
+    else if (nameLower.includes('watch') || nameLower.includes('band')) thumb = 'https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg';
+    else if (nameLower.includes('laptop') || nameLower.includes('macbook')) thumb = '/static/images/laptop.svg';
+    else if (nameLower.includes('shoe') || nameLower.includes('nike')) thumb = '/static/images/shoes.svg';
+    else if (nameLower.includes('mouse') || nameLower.includes('keyboard') || nameLower.includes('portronics') || nameLower.includes('toad')) thumb = '/static/images/accessory.svg';
+    else if (nameLower.includes('iphone') || nameLower.includes('phone') || nameLower.includes('galaxy')) thumb = 'https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg';
+    else thumb = '/static/images/generic-product.svg';
+  }
+
+  let storeIcon = '/static/images/amazon.svg';
+  const siteLower = site.toLowerCase();
+  if (siteLower.includes('flipkart')) storeIcon = '/static/images/flipkart.svg';
+  else if (siteLower.includes('myntra')) storeIcon = '/static/images/myntra.svg';
+  else if (siteLower.includes('ajio')) storeIcon = '/static/images/ajio.svg';
+  else if (siteLower.includes('meesho')) storeIcon = '/static/images/meesho.svg';
 
   const newTracker = {
     id: Date.now(),
     productName: name,
     shortName: name.length > 24 ? name.substring(0, 22) + '...' : name,
     site: site,
-    storeIcon: site.toLowerCase().includes('flipkart') ? '/static/images/flipkart.svg' : '/static/images/amazon.svg',
+    storeIcon: storeIcon,
     thumbnail: thumb,
     currentPrice: curPrice,
     mrp: Math.round(curPrice * 1.15),
@@ -1324,7 +1387,10 @@ function confirmAddTracker() {
   saveTrackers();
   closeModal();
   renderAllViews();
-  showToast(`🎯 Tracking activated for ${newTracker.shortName}`);
+  showToast(`🎯 Price alert activated for ${newTracker.shortName}`);
+
+  // Send browser notification immediately upon adding target
+  sendBrowserNotification(`🔔 Price Tracker Activated: ${newTracker.shortName}`, `Target price set to ₹${targetPrice.toLocaleString()}. We will notify and alarm when it drops!`, newTracker.url);
 
   // Trigger celebration if already below target!
   if (newTracker.status === 'below') {

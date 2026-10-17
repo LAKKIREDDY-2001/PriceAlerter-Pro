@@ -27,11 +27,12 @@
         <!-- Product Image Thumbnail -->
         <ImageView
             android:id="@+id/ivItemThumb"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/badge_tracking"
-            android:padding="4dp"
+            android:padding="3dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_prod_iphone"
             android:contentDescription="Product thumbnail" />
 
@@ -62,9 +63,10 @@
 
                 <ImageView
                     android:id="@+id/ivItemSiteLogo"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="6dp"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_store_amazon"
                     android:contentDescription="Store" />
 

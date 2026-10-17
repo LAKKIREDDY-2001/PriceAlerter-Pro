@@ -43,5 +43,10 @@ class TestPriceSystemIntegrity(unittest.TestCase):
         data = extract_smart_catalog_fallback(sample)
         self.assertEqual(data["price"], 1620.0, "RS5 token in Amazon URL must not be mistaken for price 5")
 
+    def test_product_real_image_url(self):
+        sample = "https://www.amazon.in/Skechers-Summits-Womens-Casual-Shoes-896220ID-NVMT-6-Navy-Multi/dp/B0CBVN2SCS/"
+        data = extract_smart_catalog_fallback(sample)
+        self.assertTrue(data.get("imageUrl", "").startswith("https://"), "Product fallback must return high-resolution image URL")
+
 if __name__ == '__main__':
     unittest.main()

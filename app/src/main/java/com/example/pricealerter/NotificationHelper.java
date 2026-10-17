@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import java.util.Locale;
 
 public class NotificationHelper {
     public static final String CHANNEL_ID = "price_alerts_channel";
@@ -64,7 +65,30 @@ public class NotificationHelper {
                     r.play();
                 }
             }
+
+            android.os.Vibrator v = (android.os.Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (v != null && v.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(android.os.VibrationEffect.createWaveform(new long[]{0, 500, 200, 500, 200, 800}, -1));
+                } else {
+                    v.vibrate(new long[]{0, 500, 200, 500, 200, 800}, -1);
+                }
+            }
         } catch (Exception ignored) {}
+    }
+
+    public static void sendTargetAddedAlert(Context context, String productName, double targetPrice, String currencySymbol, String productUrl) {
+        String sym = currencySymbol != null ? currencySymbol : "₹";
+        String title = "🔔 Price Tracker Activated: " + productName;
+        String message = "Target set to " + sym + String.format(Locale.US, "%,.0f", targetPrice) + ". We're actively tracking live prices and will sound an alarm when it drops!";
+        sendPriceAlert(context, title, message, productUrl);
+    }
+
+    public static void sendTargetReachedAlert(Context context, String productName, double currentPrice, double targetPrice, String currencySymbol, String productUrl) {
+        String sym = currencySymbol != null ? currencySymbol : "₹";
+        String title = "🎉 TARGET PRICE REACHED! 🚀";
+        String message = productName + " reached your target of " + sym + String.format(Locale.US, "%,.0f", targetPrice) + "! Live price: " + sym + String.format(Locale.US, "%,.0f", currentPrice) + ". Tap to buy now!";
+        sendPriceAlert(context, title, message, productUrl);
     }
 
     public static void sendPriceAlert(Context context, String title, String message, String productUrl) {
@@ -91,9 +115,10 @@ public class NotificationHelper {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
+        int reqCode = (int) (System.currentTimeMillis() & 0x7FFFFFFF);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
-                (int) System.currentTimeMillis(),
+                reqCode,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
         );
@@ -109,15 +134,18 @@ public class NotificationHelper {
                 .setContentText(message)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setVibrate(new long[]{0, 600, 250, 600, 250, 1000})
+                .setLights(Color.GREEN, 500, 500)
                 .setSound(soundUri)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
-            manager.notify((int) System.currentTimeMillis(), builder.build());
+            manager.notify(reqCode, builder.build());
         }
     }
 }

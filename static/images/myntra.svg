@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <rect width="48" height="48" rx="12" fill="#FFFFFF"/>
+  <rect width="48" height="48" rx="12" fill="#FF3F6C" fill-opacity="0.08"/>
+  <!-- Myntra colorful stylish M logo -->
+  <path d="M12 34l7.5-18 4.5 10 4.5-10 7.5 18h-4.8l-4.7-11.5-3 6.8h-2.5l-3-6.8L16.8 34H12z" fill="#FF3F6C"/>
+  <path d="M17.5 24.5l3.5 8h3l3.5-8-2-4.5-3 6.5-3-6.5z" fill="#F85A2B"/>
+  <path d="M21 32.5l3 2.5 3-2.5-1.5-3.5h-3z" fill="#FFA41C"/>
+</svg>
