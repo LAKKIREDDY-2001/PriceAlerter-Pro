@@ -10,9 +10,10 @@
         <item name="colorSecondaryVariant">@color/accent_dark</item>
         <item name="colorOnSecondary">@color/white</item>
         
-        <!-- Backgrounds -->
+        <!-- Backgrounds & System Bars matching Figma Clean White Theme -->
         <item name="android:windowBackground">@color/background</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:statusBarColor">@color/surface</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@color/surface</item>
     </style>
 </resources>

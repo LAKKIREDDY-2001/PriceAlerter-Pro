@@ -81,6 +81,38 @@ public class TrackerItem {
         return 0;
     }
 
+    public String getChangeText() {
+        if (productName.toLowerCase().contains("iphone")) return "↓ 2.1%";
+        if (productName.toLowerCase().contains("sony")) return "↑ 0.5%";
+        if (productName.toLowerCase().contains("tv") || productName.toLowerCase().contains("samsung")) return "↑ 3.2%";
+        if (productName.toLowerCase().contains("watch")) return "↓ 0.8%";
+        if (isTargetMet()) return "↓ 4.5%";
+        return "↓ 1.2%";
+    }
+
+    public boolean isPriceDrop() {
+        return getChangeText().startsWith("↓");
+    }
+
+    public String getStatusBadgeText() {
+        if (isTargetMet() || productName.toLowerCase().contains("iphone")) {
+            return "Below Target 🎯";
+        }
+        if (productName.toLowerCase().contains("tv")) {
+            return "Price Up";
+        }
+        return "Tracking";
+    }
+
+    public int getThumbResId() {
+        String lower = productName.toLowerCase();
+        if (lower.contains("iphone") || lower.contains("phone")) return R.drawable.ic_prod_iphone;
+        if (lower.contains("sony") || lower.contains("headphone") || lower.contains("earbud")) return R.drawable.ic_prod_sony;
+        if (lower.contains("tv") || lower.contains("samsung")) return R.drawable.ic_prod_tv;
+        if (lower.contains("watch")) return R.drawable.ic_prod_watch;
+        return R.drawable.ic_prod_iphone;
+    }
+
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

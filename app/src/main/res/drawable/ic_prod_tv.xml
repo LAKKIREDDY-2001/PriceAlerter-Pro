@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:pathData="M8,4 L40,4 C42.2,4 44,5.8 44,8 L44,40 C44,42.2 42.2,44 40,44 L8,44 C5.8,44 4,42.2 4,40 L4,8 C4,5.8 5.8,4 8,4 Z"
+        android:fillColor="#F1F5F9" />
+    <!-- TV Bezel -->
+    <path
+        android:pathData="M11,14 L37,14 C38,14 39,15 39,16 L39,30 C39,31 38,32 37,32 L11,32 C10,32 9,31 9,30 L9,16 C9,15 10,14 11,14 Z"
+        android:fillColor="#0F172A" />
+    <!-- TV Screen -->
+    <path
+        android:pathData="M12,15 L36,15 L36,29 L12,29 Z"
+        android:fillColor="#8B5CF6" />
+    <!-- Stand -->
+    <path
+        android:pathData="M21,32 L27,32 M24,32 L24,35 M18,35 L30,35"
+        android:strokeColor="#475569"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round" />
+</vector>

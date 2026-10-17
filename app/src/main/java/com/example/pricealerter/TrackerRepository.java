@@ -50,21 +50,21 @@ public class TrackerRepository {
         seedList.add(new TrackerItem(
                 101,
                 "https://www.amazon.in/dp/B0CHX1W1XY",
-                "Apple iPhone 15 (128 GB) - Blue",
-                65999.0,
+                "Apple iPhone 15 (128GB) - Black",
                 59999.0,
+                55000.0,
                 "INR",
                 "₹",
                 "Amazon",
                 "Just now",
-                0
+                1
         ));
         seedList.add(new TrackerItem(
                 102,
-                "https://www.flipkart.com/apple-macbook-air-m2",
-                "Apple MacBook Air M2 - 8GB/256GB SSD",
-                89900.0,
-                79999.0,
+                "https://www.flipkart.com/sony-wh-1000xm5/p/itm123",
+                "Sony WH-1000XM5 Wireless Headphones",
+                24999.0,
+                20000.0,
                 "INR",
                 "₹",
                 "Flipkart",
@@ -73,15 +73,27 @@ public class TrackerRepository {
         ));
         seedList.add(new TrackerItem(
                 103,
-                "https://www.myntra.com/shoes/nike/nike-air-max",
-                "Nike Air Max Impact 4 Basketball Shoes",
-                3799.0,
-                3999.0,
+                "https://www.amazon.in/dp/B09V7D3G3P",
+                "Samsung 55\" 4K Ultra HD Smart TV",
+                45990.0,
+                40000.0,
                 "INR",
                 "₹",
-                "Myntra",
+                "Amazon",
                 "Today",
-                1
+                0
+        ));
+        seedList.add(new TrackerItem(
+                104,
+                "https://www.flipkart.com/apple-watch-series-9/p/itm456",
+                "Apple Watch Series 9 GPS 45mm",
+                41999.0,
+                35000.0,
+                "INR",
+                "₹",
+                "Flipkart",
+                "2 days ago",
+                0
         ));
         saveLocalTrackers(seedList);
     }

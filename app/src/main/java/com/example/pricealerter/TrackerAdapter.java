@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
@@ -53,10 +52,9 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TrackerItem item = items.get(position);
 
-        holder.tvProductName.setText(item.getProductName());
-        holder.tvSiteBadge.setText(item.getSite());
+        holder.tvTitle.setText(item.getProductName());
 
-        // Site logo matching
+        // Store Logo
         String site = item.getSite() != null ? item.getSite().toLowerCase() : "";
         if (site.contains("amazon")) {
             holder.ivSiteLogo.setImageResource(R.drawable.ic_store_amazon);
@@ -72,68 +70,62 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.ViewHold
             holder.ivSiteLogo.setImageResource(R.drawable.ic_store_generic);
         }
 
-        // Clickable clean product link
-        String rawUrl = item.getUrl() != null ? item.getUrl() : "";
-        String cleanDisplayUrl = rawUrl.replace("https://", "").replace("http://", "").replace("www.", "");
-        if (cleanDisplayUrl.length() > 36) {
-            cleanDisplayUrl = cleanDisplayUrl.substring(0, 33) + "...";
-        }
-        holder.tvProductLink.setText(cleanDisplayUrl + " 🔗");
-        holder.tvProductLink.setOnClickListener(v -> openProductUrl(rawUrl));
+        // Product Thumbnail
+        holder.ivThumb.setImageResource(item.getThumbResId());
 
+        // Current & Target Prices
         String symbol = item.getCurrencySymbol() != null ? item.getCurrencySymbol() : "₹";
-        holder.tvCurrentPrice.setText(symbol + String.format(Locale.US, "%,.2f", item.getCurrentPrice()));
-        holder.tvTargetPrice.setText("Target: " + symbol + String.format(Locale.US, "%,.2f", item.getTargetPrice()));
+        holder.tvCurrentPrice.setText(symbol + String.format(Locale.US, "%,.0f", item.getCurrentPrice()));
+        holder.tvTargetPrice.setText("Target: " + symbol + String.format(Locale.US, "%,.0f", item.getTargetPrice()));
 
-        if (item.isTargetMet()) {
-            holder.tvDropBadge.setText("🎉 Target Met! 🏆");
-            holder.tvDropBadge.setBackgroundResource(R.drawable.badge_emerald);
-            holder.tvDropBadge.setTextColor(context.getResources().getColor(R.color.accent_dark));
+        // Status Badge & Change Percentage (Matching Figma Mobile 1)
+        String status = item.getStatusBadgeText();
+        holder.tvStatusBadge.setText(status);
 
-            if (holder.cardTracker != null) {
-                holder.cardTracker.setStrokeColor(context.getResources().getColor(R.color.accent));
-                holder.cardTracker.setStrokeWidth(4);
-            }
-
-            if (holder.btnCelebrate != null) {
-                holder.btnCelebrate.setVisibility(View.VISIBLE);
-                holder.btnCelebrate.setOnClickListener(v -> {
-                    new CelebrationDialog(context, item).show();
-                });
-            }
-
-            holder.itemView.setOnClickListener(v -> {
-                new CelebrationDialog(context, item).show();
-            });
+        if (status.contains("Below")) {
+            holder.tvStatusBadge.setBackgroundResource(R.drawable.badge_below_target);
+            holder.tvStatusBadge.setTextColor(context.getResources().getColor(R.color.accent_dark));
+        } else if (status.contains("Price Up")) {
+            holder.tvStatusBadge.setBackgroundResource(R.drawable.badge_price_up);
+            holder.tvStatusBadge.setTextColor(context.getResources().getColor(R.color.error));
         } else {
-            int discount = item.getDiscountPercent();
-            if (discount > 0) {
-                holder.tvDropBadge.setText("-" + discount + "% Target");
-            } else {
-                holder.tvDropBadge.setText("Tracking Active");
-            }
-            holder.tvDropBadge.setBackgroundResource(R.drawable.badge_site);
-            holder.tvDropBadge.setTextColor(context.getResources().getColor(R.color.primary));
-
-            if (holder.cardTracker != null) {
-                holder.cardTracker.setStrokeColor(context.getResources().getColor(R.color.card_stroke));
-                holder.cardTracker.setStrokeWidth(2);
-            }
-
-            if (holder.btnCelebrate != null) {
-                holder.btnCelebrate.setVisibility(View.GONE);
-            }
-
-            holder.itemView.setOnClickListener(null);
+            holder.tvStatusBadge.setBackgroundResource(R.drawable.badge_tracking);
+            holder.tvStatusBadge.setTextColor(context.getResources().getColor(R.color.text_secondary));
         }
 
-        holder.btnOpenStore.setOnClickListener(v -> openProductUrl(item.getUrl()));
+        String changeText = item.getChangeText();
+        holder.tvChange.setText(changeText);
+        if (item.isPriceDrop()) {
+            holder.tvChange.setTextColor(context.getResources().getColor(R.color.accent));
+        } else {
+            holder.tvChange.setTextColor(context.getResources().getColor(R.color.error));
+        }
 
-        holder.btnDelete.setOnClickListener(v -> {
-            if (deleteListener != null) {
-                deleteListener.onDelete(item);
+        // Card Click opens Celebration if target reached or shows Figma Mobile 3 detail sheet
+        holder.itemView.setOnClickListener(v -> {
+            if (item.isTargetMet()) {
+                new CelebrationDialog(context, item).show();
+            } else {
+                new ProductDetailBottomSheetDialog(context, item).show();
             }
         });
+
+        // Long press opens delete prompt
+        holder.itemView.setOnLongClickListener(v -> {
+            if (deleteListener != null) {
+                deleteListener.onDelete(item);
+                return true;
+            }
+            return false;
+        });
+
+        if (holder.btnDelete != null) {
+            holder.btnDelete.setOnClickListener(v -> {
+                if (deleteListener != null) {
+                    deleteListener.onDelete(item);
+                }
+            });
+        }
     }
 
     private void openProductUrl(String url) {
@@ -145,7 +137,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.ViewHold
                 Toast.makeText(context, "Could not open URL", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(context, "Demo product URL", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Official store product link", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -156,31 +148,25 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         MaterialCardView cardTracker;
+        ImageView ivThumb;
+        TextView tvTitle;
         ImageView ivSiteLogo;
-        TextView tvSiteBadge;
-        TextView tvDropBadge;
-        ImageView ivProductImage;
-        TextView tvProductName;
-        TextView tvProductLink;
         TextView tvCurrentPrice;
         TextView tvTargetPrice;
-        MaterialButton btnCelebrate;
-        MaterialButton btnOpenStore;
+        TextView tvStatusBadge;
+        TextView tvChange;
         ImageView btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             cardTracker = itemView.findViewById(R.id.cardTracker);
+            ivThumb = itemView.findViewById(R.id.ivItemThumb);
+            tvTitle = itemView.findViewById(R.id.tvItemTitle);
             ivSiteLogo = itemView.findViewById(R.id.ivItemSiteLogo);
-            tvSiteBadge = itemView.findViewById(R.id.tvItemSiteBadge);
-            tvDropBadge = itemView.findViewById(R.id.tvItemDropBadge);
-            ivProductImage = itemView.findViewById(R.id.ivItemProductImage);
-            tvProductName = itemView.findViewById(R.id.tvItemProductName);
-            tvProductLink = itemView.findViewById(R.id.tvItemProductLink);
             tvCurrentPrice = itemView.findViewById(R.id.tvItemCurrentPrice);
             tvTargetPrice = itemView.findViewById(R.id.tvItemTargetPrice);
-            btnCelebrate = itemView.findViewById(R.id.btnItemCelebrate);
-            btnOpenStore = itemView.findViewById(R.id.btnItemOpenStore);
+            tvStatusBadge = itemView.findViewById(R.id.tvItemStatusBadge);
+            tvChange = itemView.findViewById(R.id.tvItemChange);
             btnDelete = itemView.findViewById(R.id.btnItemDelete);
         }
     }

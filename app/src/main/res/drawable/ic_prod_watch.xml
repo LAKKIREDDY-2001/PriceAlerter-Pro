@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:pathData="M8,4 L40,4 C42.2,4 44,5.8 44,8 L44,40 C44,42.2 42.2,44 40,44 L8,44 C5.8,44 4,42.2 4,40 L4,8 C4,5.8 5.8,4 8,4 Z"
+        android:fillColor="#F1F5F9" />
+    <!-- Straps -->
+    <path
+        android:pathData="M20,6 L28,6 L28,15 L20,15 Z"
+        android:fillColor="#FB7185" />
+    <path
+        android:pathData="M20,33 L28,33 L28,42 L20,42 Z"
+        android:fillColor="#FB7185" />
+    <!-- Case -->
+    <path
+        android:pathData="M16,14 L32,14 C34,14 36,16 36,18 L36,30 C36,32 34,34 32,34 L16,34 C14,34 12,32 12,30 L12,18 C12,16 14,14 16,14 Z"
+        android:fillColor="#FBCFE8"
+        android:strokeColor="#FDA4AF"
+        android:strokeWidth="1" />
+    <!-- Screen -->
+    <path
+        android:pathData="M14,16 L34,16 L34,32 L14,32 Z"
+        android:fillColor="#0F172A" />
+</vector>
