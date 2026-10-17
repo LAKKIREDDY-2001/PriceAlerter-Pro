@@ -330,8 +330,8 @@ public class LivePriceScraper {
         if (combined.contains("iphone") && (combined.contains("14") || combined.contains("13"))) {
             return 49999.0;
         }
-        if (combined.contains("macbook") && (combined.contains("m2") || combined.contains("m3"))) {
-            return 89900.0;
+        if (combined.contains("macbook") && (combined.contains("m2") || combined.contains("m3") || combined.contains("air"))) {
+            return 69990.0;
         }
         if (combined.contains("macbook") && combined.contains("pro")) {
             return 149900.0;
@@ -343,7 +343,7 @@ public class LivePriceScraper {
             return 124990.0;
         }
         if (combined.contains("b09xs7jwhh") || combined.contains("1000xm5")) {
-            return 26990.0;
+            return 24999.0;
         }
         if (combined.contains("quietcomfort") || combined.contains("bose")) {
             return 29900.0;
@@ -355,15 +355,15 @@ public class LivePriceScraper {
             return 1620.0;
         }
         if (combined.contains("series 9") || (combined.contains("watch") && combined.contains("apple"))) {
-            return 38999.0;
+            return 34999.0;
         }
         if (combined.contains("b09v7d3g3p") || (combined.contains("tv") && combined.contains("55"))) {
             return 45990.0;
         }
 
         // Category heuristics
-        if (combined.contains("laptop") || combined.contains("notebook")) return 54990.0;
-        if (combined.contains("iphone") || combined.contains("phone") || combined.contains("mobile") || combined.contains("smartphone")) return 19999.0;
+        if (combined.contains("laptop") || combined.contains("notebook") || combined.contains("macbook")) return 69990.0;
+        if (combined.contains("iphone") || combined.contains("phone") || combined.contains("mobile") || combined.contains("smartphone")) return 54999.0;
         if (combined.contains("headphone") || combined.contains("earphone") || combined.contains("audio") || combined.contains("earbuds")) return 3499.0;
         if (combined.contains("shoes") || combined.contains("shoe") || combined.contains("sneaker")) return 1620.0;
         if (combined.contains("tv") || combined.contains("television")) return 32990.0;
@@ -378,12 +378,16 @@ public class LivePriceScraper {
         if (lower.contains("shoe") || lower.contains("skechers") || lower.contains("sneaker") || lower.contains("nike") || lower.contains("puma") || lower.contains("footwear") || lower.contains("summits")) {
             return R.drawable.ic_prod_shoe;
         }
-        if (lower.contains("headphone") || lower.contains("earphone") || lower.contains("sony") || lower.contains("audio") || lower.contains("boat") || lower.contains("earbuds")) {
+        if (lower.contains("macbook") || lower.contains("laptop") || lower.contains("notebook") || (lower.contains("apple") && lower.contains("mac")) || lower.contains("computer") || lower.contains("rog") || lower.contains("strix") || lower.contains("xps")) {
+            return R.drawable.ic_prod_macbook;
+        }
+        if (lower.contains("watch") || lower.contains("band") || lower.contains("fitbit") || lower.contains("series 9")) {
+            return R.drawable.ic_prod_watch;
+        }
+        if (lower.contains("headphone") || lower.contains("earphone") || lower.contains("sony") || lower.contains("audio") || lower.contains("boat") || lower.contains("earbuds") || lower.contains("bose")) {
             return R.drawable.ic_prod_sony;
         } else if (lower.contains("tv") || lower.contains("television") || lower.contains("monitor") || lower.contains("samsung")) {
             return R.drawable.ic_prod_tv;
-        } else if (lower.contains("watch") || lower.contains("band") || lower.contains("fitbit")) {
-            return R.drawable.ic_prod_watch;
         } else {
             return R.drawable.ic_prod_iphone;
         }
@@ -493,20 +497,23 @@ public class LivePriceScraper {
         if (combined.contains("b0cbvn2scs") || combined.contains("skechers") || combined.contains("summits")) {
             return "https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg";
         }
-        if (combined.contains("iphone") || combined.contains("b0chx1w1xy") || combined.contains("apple")) {
-            return "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg";
-        }
-        if (combined.contains("sony") || combined.contains("1000xm5") || combined.contains("b09xs7jwhh")) {
-            return "https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg";
-        }
-        if (combined.contains("tv") || combined.contains("b09v7d3g3p") || combined.contains("samsung")) {
-            return "https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg";
+        if (combined.contains("macbook") || combined.contains("laptop") || combined.contains("mac air") || combined.contains("mac pro") || (combined.contains("apple") && combined.contains("mac")) || combined.contains("rog") || combined.contains("strix") || combined.contains("xps")) {
+            return "https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SL1500_.jpg";
         }
         if (combined.contains("watch") || combined.contains("series 9")) {
             return "https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg";
         }
-        if (combined.contains("macbook") || combined.contains("laptop")) {
-            return "https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SL1500_.jpg";
+        if (combined.contains("iphone") || combined.contains("b0chx1w1xy") || (combined.contains("apple") && combined.contains("phone"))) {
+            return "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg";
+        }
+        if (combined.contains("galaxy") || combined.contains("s24") || combined.contains("s23")) {
+            return "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg";
+        }
+        if (combined.contains("sony") || combined.contains("1000xm5") || combined.contains("b09xs7jwhh") || combined.contains("bose") || combined.contains("headphone")) {
+            return "https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg";
+        }
+        if (combined.contains("tv") || combined.contains("b09v7d3g3p") || combined.contains("samsung")) {
+            return "https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg";
         }
         if (combined.contains("shoe") || combined.contains("sneaker") || combined.contains("nike")) {
             return "https://m.media-amazon.com/images/I/71K8iXfK1pL._AC_UL1500_.jpg";

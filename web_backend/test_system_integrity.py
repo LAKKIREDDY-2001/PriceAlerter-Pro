@@ -48,5 +48,16 @@ class TestPriceSystemIntegrity(unittest.TestCase):
         data = extract_smart_catalog_fallback(sample)
         self.assertTrue(data.get("imageUrl", "").startswith("https://"), "Product fallback must return high-resolution image URL")
 
+    def test_macbook_image_not_iphone(self):
+        sample = "https://www.flipkart.com/apple-macbook-air-m2"
+        data = extract_smart_catalog_fallback(sample)
+        self.assertIn("71f5Eu5lJSL", data.get("imageUrl", ""), "MacBook must return MacBook photo, never iPhone photo")
+        self.assertNotIn("71d7rfSl0wL", data.get("imageUrl", ""), "MacBook must NOT return iPhone photo")
+
+    def test_macbook_selling_price(self):
+        sample = "https://www.flipkart.com/apple-macbook-air-m2"
+        data = extract_smart_catalog_fallback(sample)
+        self.assertEqual(data["price"], 69990.0, "MacBook Air M2 price should be 69990.0")
+
 if __name__ == '__main__':
     unittest.main()

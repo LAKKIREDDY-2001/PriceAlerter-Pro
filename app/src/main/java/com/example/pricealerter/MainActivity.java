@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton btnRunAiCompare;
     private ProgressBar pbCompareLoading;
     private View layoutCompareResults;
+    private ImageView ivCompareProd1, ivCompareProd2;
+    private TextView tvCompareProd1Title, tvCompareProd1Price, tvCompareProd2Title, tvCompareProd2Price;
     private TextView tvCompareWinnerBadge, tvCompareWinnerTitle, tvCompareWinnerVerdict;
     private TextView tvSegment1Prod1Name, tvSegment1Prod1Price, tvSegment1Prod1Score;
     private TextView tvSegment1Prod2Name, tvSegment1Prod2Price, tvSegment1Prod2Score;
@@ -256,6 +258,12 @@ public class MainActivity extends AppCompatActivity {
         btnRunAiCompare = findViewById(R.id.btnRunAiCompare);
         pbCompareLoading = findViewById(R.id.pbCompareLoading);
         layoutCompareResults = findViewById(R.id.layoutCompareResults);
+        ivCompareProd1 = findViewById(R.id.ivCompareProd1);
+        ivCompareProd2 = findViewById(R.id.ivCompareProd2);
+        tvCompareProd1Title = findViewById(R.id.tvCompareProd1Title);
+        tvCompareProd1Price = findViewById(R.id.tvCompareProd1Price);
+        tvCompareProd2Title = findViewById(R.id.tvCompareProd2Title);
+        tvCompareProd2Price = findViewById(R.id.tvCompareProd2Price);
         tvCompareWinnerBadge = findViewById(R.id.tvCompareWinnerBadge);
         tvCompareWinnerTitle = findViewById(R.id.tvCompareWinnerTitle);
         tvCompareWinnerVerdict = findViewById(R.id.tvCompareWinnerVerdict);
@@ -1102,6 +1110,21 @@ public class MainActivity extends AppCompatActivity {
         // Winner Banner
         tvCompareWinnerTitle.setText(r.winnerName != null ? r.winnerName : "Recommended Product");
         tvCompareWinnerVerdict.setText(r.verdict != null ? r.verdict : "Evaluated based on Pricing, Customer Reviews, Safety Certifications, and Identified Drawbacks.");
+
+        // Product Cards with Real Photos & Prices
+        if (tvCompareProd1Title != null) tvCompareProd1Title.setText(r.name1 != null ? r.name1 : "Product 1");
+        if (tvCompareProd1Price != null) tvCompareProd1Price.setText(r.currencySymbol + String.format(Locale.US, "%,.2f", r.price1));
+        if (ivCompareProd1 != null) {
+            int placeholder = (r.name1 != null && (r.name1.toLowerCase().contains("mac") || r.name1.toLowerCase().contains("laptop"))) ? R.drawable.ic_prod_macbook : R.drawable.ic_prod_iphone;
+            ImageLoader.load(ivCompareProd1, r.imageUrl1, placeholder);
+        }
+
+        if (tvCompareProd2Title != null) tvCompareProd2Title.setText(r.name2 != null ? r.name2 : "Product 2");
+        if (tvCompareProd2Price != null) tvCompareProd2Price.setText(r.currencySymbol + String.format(Locale.US, "%,.2f", r.price2));
+        if (ivCompareProd2 != null) {
+            int placeholder = (r.name2 != null && (r.name2.toLowerCase().contains("mac") || r.name2.toLowerCase().contains("laptop"))) ? R.drawable.ic_prod_macbook : R.drawable.ic_prod_iphone;
+            ImageLoader.load(ivCompareProd2, r.imageUrl2, placeholder);
+        }
 
         // Segment 1: Pricing & Value
         tvSegment1Prod1Name.setText(r.name1 != null ? r.name1 : "Product 1");

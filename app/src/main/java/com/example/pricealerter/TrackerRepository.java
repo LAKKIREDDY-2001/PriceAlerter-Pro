@@ -51,49 +51,79 @@ public class TrackerRepository {
                 101,
                 "https://www.amazon.in/dp/B0CHX1W1XY",
                 "Apple iPhone 15 (128GB) - Black",
-                59999.0,
+                54999.0,
                 55000.0,
                 "INR",
                 "₹",
                 "Amazon",
-                "Just now",
-                1
+                "2 hours ago",
+                1,
+                "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg"
         ));
         seedList.add(new TrackerItem(
                 102,
                 "https://www.flipkart.com/sony-wh-1000xm5/p/itm123",
                 "Sony WH-1000XM5 Wireless Headphones",
-                24999.0,
+                19999.0,
                 20000.0,
                 "INR",
                 "₹",
                 "Flipkart",
-                "1 hour ago",
-                0
+                "5 hours ago",
+                1,
+                "https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg"
         ));
         seedList.add(new TrackerItem(
                 103,
                 "https://www.amazon.in/dp/B09V7D3G3P",
                 "Samsung 55\" 4K Ultra HD Smart TV",
                 45990.0,
-                40000.0,
+                44500.0,
                 "INR",
                 "₹",
                 "Amazon",
-                "Today",
-                0
+                "1 day ago",
+                0,
+                "https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg"
         ));
         seedList.add(new TrackerItem(
                 104,
                 "https://www.flipkart.com/apple-watch-series-9/p/itm456",
                 "Apple Watch Series 9 GPS 45mm",
-                41999.0,
+                34999.0,
                 35000.0,
                 "INR",
                 "₹",
                 "Flipkart",
                 "2 days ago",
-                0
+                1,
+                "https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg"
+        ));
+        seedList.add(new TrackerItem(
+                105,
+                "https://www.amazon.in/Skechers-Summits-Womens-Casual-Shoes-896220ID-NVMT-6-Navy-Multi/dp/B0CBVN2SCS/",
+                "Skechers Women's Summits Casual Shoes",
+                1620.0,
+                1650.0,
+                "INR",
+                "₹",
+                "Amazon",
+                "Just now",
+                1,
+                "https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg"
+        ));
+        seedList.add(new TrackerItem(
+                106,
+                "https://www.flipkart.com/apple-macbook-air-m2",
+                "Apple MacBook Air M2 (8GB RAM, 256GB SSD)",
+                69990.0,
+                72000.0,
+                "INR",
+                "₹",
+                "Flipkart",
+                "3 hours ago",
+                1,
+                "https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SL1500_.jpg"
         ));
         saveLocalTrackers(seedList);
     }

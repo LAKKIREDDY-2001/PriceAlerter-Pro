@@ -1423,9 +1423,9 @@ def extract_smart_catalog_fallback(url):
     elif "b09v7d3g3p" in clean_url_lower or ("tv" in title.lower() and "55" in title.lower()):
         title = "Samsung 55\" 4K Ultra HD Smart TV"
         price = 45990.0
-    elif "macbook" in clean_url_lower or "macbook" in title.lower():
+    elif "macbook" in clean_url_lower or "macbook" in title.lower() or "mac" in clean_url_lower:
         title = "Apple MacBook Air M2"
-        price = 89900.0
+        price = 69990.0
     elif "galaxy" in clean_url_lower and "s24" in clean_url_lower:
         title = "Samsung Galaxy S24 5G"
         price = 62999.0
@@ -1440,7 +1440,7 @@ def extract_smart_catalog_fallback(url):
         price = 29900.0
     elif "watch" in title.lower():
         title = "Apple Watch Series 9 GPS 45mm"
-        price = 38999.0
+        price = 34999.0
     elif not title or len(title) < 3:
         title = f"{site.capitalize()} Premium Item"
         price = 1620.0
@@ -1448,8 +1448,8 @@ def extract_smart_catalog_fallback(url):
         t_lower = title.lower()
         if "iphone" in t_lower:
             price = 54999.0
-        elif "laptop" in t_lower:
-            price = 54990.0
+        elif "laptop" in t_lower or "macbook" in t_lower:
+            price = 69990.0
         elif "audio" in t_lower or "headphone" in t_lower:
             price = 3499.0
         elif "shoe" in t_lower or "sneaker" in t_lower or "skechers" in t_lower:
@@ -1476,16 +1476,16 @@ def extract_smart_catalog_fallback(url):
     image_url = None
     if "b0cbvn2scs" in clean_url_lower or "skechers" in clean_url_lower or "summits" in clean_url_lower:
         image_url = "https://m.media-amazon.com/images/I/71YyO5+9S+L._AC_UY1000_.jpg"
-    elif "iphone" in clean_url_lower or "b0chx1w1xy" in clean_url_lower:
+    elif "macbook" in clean_url_lower or "macbook" in title.lower() or "laptop" in clean_url_lower or "laptop" in title.lower() or "mac air" in clean_url_lower or "mac air" in title.lower():
+        image_url = "https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SL1500_.jpg"
+    elif "watch" in clean_url_lower or "watch" in title.lower():
+        image_url = "https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg"
+    elif "iphone" in clean_url_lower or "b0chx1w1xy" in clean_url_lower or "iphone" in title.lower():
         image_url = "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg"
-    elif "1000xm5" in clean_url_lower or "sony" in clean_url_lower:
+    elif "1000xm5" in clean_url_lower or "sony" in clean_url_lower or "bose" in clean_url_lower:
         image_url = "https://m.media-amazon.com/images/I/61+elLndqVL._AC_SL1500_.jpg"
     elif "tv" in clean_url_lower or "samsung" in clean_url_lower:
         image_url = "https://m.media-amazon.com/images/I/71L-2i6hD9L._AC_SL1500_.jpg"
-    elif "watch" in clean_url_lower:
-        image_url = "https://m.media-amazon.com/images/I/71U-5W9A1nL._AC_SL1500_.jpg"
-    elif "macbook" in clean_url_lower or "laptop" in clean_url_lower:
-        image_url = "https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SL1500_.jpg"
     elif "shoe" in clean_url_lower or "nike" in clean_url_lower:
         image_url = "https://m.media-amazon.com/images/I/71K8iXfK1pL._AC_UL1500_.jpg"
 
@@ -1664,12 +1664,20 @@ def fetch_single_product_info(url):
                 product_name = re.sub(r'\s*[-|]\s*(Amazon(\.in)?|Flipkart|Myntra|Ajio|Meesho|Snapdeal|Online Shopping.*)\s*$', '', product_name, flags=re.IGNORECASE).strip()
 
             if price and price > 0:
+                img = ""
+                og_img = soup.find('meta', attrs={'property': 'og:image'}) or soup.find('meta', attrs={'name': 'twitter:image'})
+                if og_img and og_img.get('content'):
+                    img = og_img['content'].strip()
+                if not img:
+                    fb_img = extract_smart_catalog_fallback(url).get('imageUrl', '')
+                    img = fb_img
                 return {
                     "name": product_name or f"{site.capitalize()} Product",
                     "price": price,
                     "currency_symbol": currency_symbol,
                     "site": site.capitalize(),
-                    "url": url
+                    "url": url,
+                    "imageUrl": img
                 }
     except Exception:
         pass
@@ -1681,7 +1689,8 @@ def fetch_single_product_info(url):
         "price": fb.get("price", 1999.0),
         "currency_symbol": fb.get("currency_symbol", "₹"),
         "site": fb.get("site", "Store"),
-        "url": url
+        "url": url,
+        "imageUrl": fb.get("imageUrl", "")
     }
 
 @app.route('/api/ai-compare', methods=['POST'])

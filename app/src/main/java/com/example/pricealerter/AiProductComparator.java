@@ -19,6 +19,7 @@ public class AiProductComparator {
         public double price1, price2;
         public String site1, site2;
         public String url1, url2;
+        public String imageUrl1, imageUrl2;
         public String currencySymbol;
 
         public String winnerName;
@@ -94,11 +95,13 @@ public class AiProductComparator {
                 r.price1 = p1.optDouble("price", 0.0);
                 r.site1 = p1.optString("site", TrackerItem.detectSite(url1));
                 r.url1 = url1;
+                r.imageUrl1 = p1.optString("imageUrl", "");
 
                 r.name2 = p2.optString("name", "Product 2");
                 r.price2 = p2.optDouble("price", 0.0);
                 r.site2 = p2.optString("site", TrackerItem.detectSite(url2));
                 r.url2 = url2;
+                r.imageUrl2 = p2.optString("imageUrl", "");
                 r.currencySymbol = p1.optString("currency_symbol", "₹");
 
                 JSONObject winner = res.getJSONObject("winner");
@@ -164,11 +167,13 @@ public class AiProductComparator {
         r.price1 = s1.price > 0 ? s1.price : LivePriceScraper.estimateCatalogPrice(url1, s1.name, s1.site);
         r.site1 = s1.site;
         r.url1 = url1;
+        r.imageUrl1 = s1.imageUrl;
 
         r.name2 = s2.name;
         r.price2 = s2.price > 0 ? s2.price : LivePriceScraper.estimateCatalogPrice(url2, s2.name, s2.site);
         r.site2 = s2.site;
         r.url2 = url2;
+        r.imageUrl2 = s2.imageUrl;
         r.currencySymbol = "₹";
 
         r.priceDifference = Math.abs(r.price1 - r.price2);

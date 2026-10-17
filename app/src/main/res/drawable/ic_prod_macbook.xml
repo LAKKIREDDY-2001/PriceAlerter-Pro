@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Outer background rounded pill -->
+    <path
+        android:pathData="M8,4 L40,4 C42.2,4 44,5.8 44,8 L44,40 C44,42.2 42.2,44 40,44 L8,44 C5.8,44 4,42.2 4,40 L4,8 C4,5.8 5.8,4 8,4 Z"
+        android:fillColor="#F1F5F9" />
+    <!-- Display Lid Outer Bezel -->
+    <path
+        android:pathData="M11,10 L37,10 C38.5,10 39.5,11 39.5,12.5 L39.5,29 L8.5,29 L8.5,12.5 C8.5,11 9.5,10 11,10 Z"
+        android:fillColor="#1E293B"
+        android:strokeColor="#475569"
+        android:strokeWidth="0.8" />
+    <!-- Retina Screen Display -->
+    <path
+        android:pathData="M11,12 L37,12 L37,27 L11,27 Z"
+        android:fillColor="#0284C7" />
+    <!-- Screen Notch/Camera dot -->
+    <path
+        android:pathData="M23,12 L25,12 C25,13 23,13 23,12 Z"
+        android:fillColor="#0F172A" />
+    <!-- Laptop Bottom Base / Keyboard Body -->
+    <path
+        android:pathData="M6,29 L42,29 C43,29 43.8,29.8 43.5,31 L41.5,36 C41.2,36.8 40.5,37.5 39.5,37.5 L8.5,37.5 C7.5,37.5 6.8,36.8 6.5,36 L4.5,31 C4.2,29.8 5,29 6,29 Z"
+        android:fillColor="#94A3B8"
+        android:strokeColor="#64748B"
+        android:strokeWidth="0.8" />
+    <!-- Trackpad & Notch Cutout -->
+    <path
+        android:pathData="M20,32 L28,32 C28.5,32 29,32.4 29,33 L29,36 L19,36 L19,33 C19,32.4 19.5,32 20,32 Z"
+        android:fillColor="#CBD5E1" />
+</vector>
